@@ -11,3 +11,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.sidebar[data-active-color="info"] .nav li.active > a {
+  color: #ff7900 !important;
+}

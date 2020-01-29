@@ -19,7 +19,7 @@ import {
 } from "reactstrap";
 import { routes } from "../../global/routes";
 
-class Header extends React.Component { 
+class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -52,17 +52,17 @@ class Header extends React.Component {
     });
   }
 
-  getBrand(){
+  getBrand() {
     let brandName = "Portfolio";
     routes.map((prop, key) => {
-      if(window.location.href.indexOf(prop.layout + prop.path) !== -1){
+      if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
         brandName = prop.name;
       }
       return null;
     });
     return brandName;
   }
-  
+
   openSidebar() {
     document.documentElement.classList.toggle("nav-open");
     this.sidebarToggle.current.classList.toggle("toggled");
@@ -146,33 +146,27 @@ class Header extends React.Component {
               </InputGroup>
             </form>
             <Nav navbar>
-              <NavItem>
-                <Link to="#pablo" className="nav-link btn-magnify">
-                  <i className="nc-icon nc-layout-11" />
-                  <p>
-                    <span className="d-lg-none d-md-block">Stats</span>
-                  </p>
-                </Link>
-              </NavItem>
               <Dropdown
                 nav
                 isOpen={this.state.dropdownOpen}
-                toggle={(e) => this.dropdownToggle(e)}
+                toggle={e => this.dropdownToggle(e)}
               >
                 <DropdownToggle caret nav>
-                  <i className="nc-icon nc-bell-55" />
+                  <i className="nc-icon nc-single-02" />
                   <p>
                     <span className="d-lg-none d-md-block">Some Actions</span>
                   </p>
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem tag="a">Action</DropdownItem>
+                  <Link to="/logout" className="dropdown-item">
+                    Account
+                  </Link>
                   <DropdownItem tag="a">Another Action</DropdownItem>
                   <DropdownItem tag="a">Something else here</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <NavItem>
-                <Link to="#pablo" className="nav-link btn-rotate">
+                <Link to="/" className="nav-link btn-rotate">
                   <i className="nc-icon nc-settings-gear-65" />
                   <p>
                     <span className="d-lg-none d-md-block">Account</span>

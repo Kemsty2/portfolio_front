@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import 'boosted/dist/css/boosted.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/paper-dashboard.css';
 import './assets/demo/demo.css';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
+import './index.css'
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

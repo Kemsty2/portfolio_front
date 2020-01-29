@@ -1,12 +1,13 @@
 import * as React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Switch } from "react-router-dom";
+import { Switch } from "react-router-dom";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
-import {routes, routesSidebar} from "../../global/routes";
+import { routes, routesSidebar } from "../../global/routes";
+import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 
 let ps;
 
@@ -55,19 +56,12 @@ class HomePage extends React.Component {
         <div className="main-panel" ref={this.mainPanel}>
           <Header {...this.props} />
           <Switch>
-            {routes.map((prop, key) => {
-              console.log(prop);
-              return (
-                <Route
-                  path={prop.layout + prop.path}
-                  component={prop.component}
-                  key={key}
-                />
-              );
-            })}
+            {routes.map((prop, key) => (
+              <RouteWithSubRoutes {...prop} key={key} />
+            ))}
           </Switch>
           <Footer fluid />
-        </div>        
+        </div>
       </div>
     );
   }

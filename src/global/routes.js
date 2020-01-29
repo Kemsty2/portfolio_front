@@ -1,59 +1,89 @@
 import Home from "../pages/HomePage/components/Home";
+import ProjectsPage from "../pages/ProjectsPage";
+import ProjectList from "../pages/ProjectsPage/components/ProjectList/ProjectList";
+import RoadMapPage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/RoadmapPage";
+import WorksPackagePage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage";
+import MembersPage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/MembersPage";
+import Project from "../pages/ProjectsPage/components/ProjectList/components/Project";
 
 export const routesSidebar = [
-  { path: "/home", icon: "test", name: "Accueil", layout: "" },
-  { path: "/projects/", icon: "test", name: "Vue Globale", layout: "" },
-  { path: "/:idProject/", icon: "test", name: "Vue Globale", layout: "/projects" },
+  { path: "/", icon: "test", name: "Accueil", layout: "" },
+  { path: "/projects/", icon: "test", name: "liste Projets", layout: "" },
   {
-    path: "/:idProject/roadmap",
+    path: "/1/",
+    icon: "test",
+    name: "Vue Globale",
+    layout: "/projects"
+  },
+  {
+    path: "/1/roadmap",
     icon: "test",
     name: "Feuille de route",
     layout: "/projects"
   },
   {
-    path: "/:idProject/workpackage",
+    path: "/1/workpackage",
     icon: "test",
     name: "Lots de Travaux",
     layout: "/projects"
   },
-  { path: "/:idProject/members", icon: "test", name: "Membres", layout: "/projects" }
+  {
+    path: "/1/members",
+    icon: "test",
+    name: "Membres",
+    layout: "/projects"
+  }
 ];
 
 export const routes = [
   {
-    path: "/home",    
+    path: "/",
     name: "Accueil",
-    layout: "",
-    component: Home
+    component: Home,
+    exact: true,
   },
   {
-    path: "/projects",    
+    path: "/projects",
     name: "Liste Projets",
     layout: "",
-    component: Home
-  },
-  {
-    path: "/:idProject",    
-    name: "Vue Globale",
-    layout: "/projects",
-    component: Home
-  },
-  {
-    path: "/:idProject/roadmap",    
-    name: "Feuille de route",
-    layout: "/projects",
-    component: Home
-  },
-  {
-    path: "/test/workpackage",    
-    name: "Lots de Travaux",
-    layout: "/projects",
-    component: Home
-  },
-  {
-    path: "/projects/test/members",    
-    name: "Membres",
-    layout: "/projects",
-    component: Home
+    component: ProjectsPage,
+    exact: false,
+    routes: [
+      {
+        path: "/projects/",
+        name: "Liste Projets",
+        layout: "/projects",
+        component: ProjectList,
+        exact: true,
+      },
+      {
+        path: "/projects/:idProject",
+        name: "Vue Globale",
+        layout: "/projects",
+        component: Project,
+        exact: true,
+      },
+      {
+        path: "/projects/:idProject/roadmap",
+        name: "Feuille de route",        
+        component: RoadMapPage,
+        layout: "/projects",
+        exact: true
+      },
+      {
+        path: "/projects/:idProject/workspackage",
+        name: "Lots de Travaux",        
+        component: WorksPackagePage,
+        layout: "/projects",
+        exact: true
+      },
+      {
+        path: "/projects/:idProject/members",
+        name: "Membres",        
+        component: MembersPage,
+        layout: "/projects",
+        exact: true
+      }
+    ]
   }
 ];
