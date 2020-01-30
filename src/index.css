@@ -15,3 +15,7 @@ code {
 .sidebar[data-active-color="info"] .nav li.active > a {
   color: #ff7900 !important;
 }
+
+.text-primary{
+  color: #ff7900 !important;
+}

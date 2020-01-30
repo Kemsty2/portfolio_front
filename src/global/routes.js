@@ -5,6 +5,7 @@ import RoadMapPage from "../pages/ProjectsPage/components/ProjectList/components
 import WorksPackagePage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage";
 import MembersPage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/MembersPage";
 import Project from "../pages/ProjectsPage/components/ProjectList/components/Project";
+import ProjectNew from "../pages/ProjectsPage/components/ProjectList/components/ProjectNew";
 
 export const routesSidebar = [
   { path: "/", icon: "test", name: "Accueil", layout: "" },
@@ -54,6 +55,13 @@ export const routes = [
         name: "Liste Projets",
         layout: "/projects",
         component: ProjectList,
+        exact: true,
+      },
+      {
+        path: "/projects/new",
+        name: "Liste Projets",
+        layout: "/projects",
+        component: ProjectNew,
         exact: true,
       },
       {
