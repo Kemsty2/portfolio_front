@@ -1,6 +1,8 @@
 import * as React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import { isEmpty, isArray, isString } from "lodash";
 
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -8,6 +10,11 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 
 import { routes, routesSidebar } from "../../global/routes";
 import { RouteWithSubRoutes } from "../../utils/utilsComponents";
+import Keycloak from "keycloak-js";
+import keycloakConfig from "../../utils/keycloak";
+import { setAdminSecurity, setAdminProfile } from "../../redux/actions/";
+import { standard } from "../../variables";
+import DefaultLoading from "../../components/DefaultLoading";
 
 let ps;
 
@@ -16,15 +23,64 @@ class HomePage extends React.Component {
     super(props);
     this.state = {
       backgroundColor: "black",
-      activeColor: "info"
+      activeColor: "warning"
     };
     this.mainPanel = React.createRef();
   }
-  componentDidMount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(this.mainPanel.current);
-      document.body.classList.toggle("perfect-scrollbar-on");
+
+  signOut = e => {
+    e.preventDefault();
+    const { profile, history } = this.props;
+
+    if (profile.keycloak) {
+      profile.keycloak.logout();
     }
+    history.push("/");
+  };
+
+  componentDidMount() {
+    const { setAdminSecurity, setAdminProfile, history, profile } = this.props;
+    console.log("profile", profile);
+    if (profile) {
+      if (navigator.platform.indexOf("Win") > -1) {
+        if(ps){
+          ps = new PerfectScrollbar(this.mainPanel.current);
+          document.body.classList.toggle("perfect-scrollbar-on");
+        }        
+      }
+    }
+
+    const keycloak = Keycloak(keycloakConfig);
+    keycloak
+      .init({ onLoad: "login-required", promiseType: "native" })
+      .then(authenticated => {
+        if (authenticated) {
+          let roles = keycloak.resourceAccess.portfolio_dev.roles;
+          roles = isArray(roles) ? roles : isString(roles) ? [roles] : [];
+
+          if (isEmpty(roles) || !roles.includes(standard)) {
+            keycloak.logout();
+            history.push("/");
+            return;
+          }
+
+          setAdminSecurity(keycloak, roles);
+          keycloak
+            .loadUserInfo()
+            .then(admin => {
+              console.log(admin);
+              setAdminProfile({
+                name: admin.name,
+                email: admin.email,
+                id: admin.sub
+              });
+            })
+            .catch(error => {});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -45,26 +101,42 @@ class HomePage extends React.Component {
     this.setState({ backgroundColor: color });
   };
   render() {
+    const { profile } = this.props;
     return (
       <div className="wrapper">
-        <Sidebar
-          {...this.props}
-          routes={routesSidebar}
-          bgColor={this.state.backgroundColor}
-          activeColor={this.state.activeColor}
-        />
-        <div className="main-panel" ref={this.mainPanel}>
-          <Header {...this.props} />
-          <Switch>
-            {routes.map((prop, key) => (
-              <RouteWithSubRoutes {...prop} key={key} />
-            ))}
-          </Switch>
-          <Footer fluid />
-        </div>
+        {profile.authenticated ? (
+          <>
+            <Sidebar
+              {...this.props}
+              routes={routesSidebar}
+              bgColor={this.state.backgroundColor}
+              activeColor={this.state.activeColor}
+            />
+            <div className="main-panel" ref={this.mainPanel}>
+              <Header {...this.props} onLogout={e => this.signOut(e)} />
+              <Switch>
+                {routes.map((prop, key) => (
+                  <RouteWithSubRoutes {...prop} key={key} />
+                ))}
+              </Switch>
+              <Footer fluid />
+            </div>
+          </>
+        ) : (
+          <DefaultLoading />
+        )}
       </div>
     );
   }
 }
 
-export default HomePage;
+const mapStateToProps = state => ({
+  profile: state.profile
+});
+
+const mapActionsToProps = {
+  setAdminSecurity,
+  setAdminProfile
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(HomePage);

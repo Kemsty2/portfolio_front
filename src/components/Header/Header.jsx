@@ -17,7 +17,7 @@ import {
   InputGroupAddon,
   Input
 } from "reactstrap";
-import { routes } from "../../global/routes";
+import {connect} from 'react-redux';
 
 class Header extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class Header extends React.Component {
 
   static defaultProps = {
     brandName: "Porfolio"
-  }
+  };
 
   toggle() {
     if (this.state.isOpen) {
@@ -55,7 +55,6 @@ class Header extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   }
-  
 
   openSidebar() {
     document.documentElement.classList.toggle("nav-open");
@@ -87,6 +86,8 @@ class Header extends React.Component {
     }
   }
   render() {
+    const {onLogout, admin} = this.props;
+
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
       <Navbar
@@ -146,17 +147,23 @@ class Header extends React.Component {
                 toggle={e => this.dropdownToggle(e)}
               >
                 <DropdownToggle caret nav>
-                  <i className="nc-icon nc-single-02" />
+                  <i className="fa fa-user" />
                   <p>
-                    <span className="d-lg-none d-md-block">Some Actions</span>
+                    <span className="d-lg-none d-md-block">User Details</span>
                   </p>
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <Link to="/logout" className="dropdown-item">
-                    Account
-                  </Link>
-                  <DropdownItem tag="a">Another Action</DropdownItem>
-                  <DropdownItem tag="a">Something else here</DropdownItem>
+                  <DropdownItem header> User Profile</DropdownItem>
+                  {admin && (
+                    <>
+                      <DropdownItem disabled><i className="fa fa-at mr-2"></i>{admin.name}</DropdownItem>
+                      <DropdownItem disabled><i className="fa fa-envelope mr-2"></i>{admin.email}</DropdownItem>
+                    </>
+                  )}
+                  <DropdownItem header> Manage Account</DropdownItem>
+                  <DropdownItem onClick={onLogout} className="dropdown-item">
+                    Deconnexion
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <NavItem>
@@ -175,4 +182,8 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+  admin: state.profile.admin
+});
+
+export default connect(mapStateToProps)(Header);

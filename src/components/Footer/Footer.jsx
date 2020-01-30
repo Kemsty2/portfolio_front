@@ -11,7 +11,7 @@ class Footer extends React.PureComponent {
           <Row>            
             <div className="credits ml-auto">
               <div className="copyright">
-                &copy; {new Date().getFullYear()}, Made 
+                &copy; {new Date().getFullYear()}, Made With  
                 <i className="fa fa-heart heart" /> by Orange Cameroun
               </div>
             </div>

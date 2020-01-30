@@ -1,14 +1,14 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -16,20 +16,51 @@ code {
   color: #ff7900 !important;
 }
 
-.text-primary{
+.sidebar[data-active-color="info"] .nav li.active > a ::before {
+  border-right-color: #000 !important;
+}
+
+@media screen and (min-width: 992px) {
+  .sidebar .sidebar-wrapper li.active > a:not([data-toggle="collapse"]):before,
+  .sidebar
+    .sidebar-wrapper
+    li.active
+    > [data-toggle="collapse"]
+    + div
+    .nav
+    li:before {
+    border-right: 17px solid #000;
+    border-top: 17px solid transparent;
+    border-bottom: 17px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -16px;
+    opacity: 1;
+    top: 7px;
+    transition: opacity 150ms ease-in;
+  }
+}
+
+.sidebar .sidebar-wrapper.ps .nav > li.active {
+  background-color: #fff !important;
+  border-right: 1px solid #000;
+}
+
+.text-primary {
   color: #ff7900 !important;
 }
 
-.project_statut_desc{
-  font-size: medium !important;  
+.project_statut_desc {
+  font-size: medium !important;
 }
 
-.text-capitalize{
+.text-capitalize {
   text-transform: capitalize !important;
   padding-left: 2rem;
   padding-right: 2rem;
 }
 
-.global-card{
+.global-card {
   min-height: 353px;
 }
