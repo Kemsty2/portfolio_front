@@ -32,6 +32,10 @@ class Header extends React.Component {
     this.sidebarToggle = React.createRef();
   }
 
+  static defaultProps = {
+    brandName: "Porfolio"
+  }
+
   toggle() {
     if (this.state.isOpen) {
       this.setState({
@@ -51,17 +55,7 @@ class Header extends React.Component {
       dropdownOpen: !this.state.dropdownOpen
     });
   }
-
-  getBrand() {
-    let brandName = "Portfolio";
-    routes.map((prop, key) => {
-      if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
-        brandName = prop.name;
-      }
-      return null;
-    });
-    return brandName;
-  }
+  
 
   openSidebar() {
     document.documentElement.classList.toggle("nav-open");
@@ -123,7 +117,7 @@ class Header extends React.Component {
                 <span className="navbar-toggler-bar bar3" />
               </button>
             </div>
-            <NavbarBrand href="/">{this.getBrand()}</NavbarBrand>
+            <NavbarBrand href="/">{this.props.brandName}</NavbarBrand>
           </div>
           <NavbarToggler onClick={this.toggle}>
             <span className="navbar-toggler-bar navbar-kebab" />

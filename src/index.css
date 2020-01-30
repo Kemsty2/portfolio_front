@@ -19,3 +19,17 @@ code {
 .text-primary{
   color: #ff7900 !important;
 }
+
+.project_statut_desc{
+  font-size: medium !important;  
+}
+
+.text-capitalize{
+  text-transform: capitalize !important;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.global-card{
+  min-height: 353px;
+}
