@@ -1,10 +1,23 @@
 import { AdministratorsActions } from "../actions/types";
+import axios from "axios";
+
+let baseURL = "http://172.26.76.96:32290/", publicUrl="";
+const credentials = btoa('WDTN4590:Naruto1997');
+
+let client = axios.create({
+  baseURL: baseURL,
+  headers: {
+    "Content-Type": 'application/json',
+    "Authorization": `Basic ${credentials}`
+  }
+});
 
 const init = {
   admin: null,  
   authenticated: false,
   roles: [],
-  keycloak: null
+  keycloak: null,
+  client: client
 };
 
 const initialState = {
@@ -30,13 +43,22 @@ export function layoutReducer(state = initialState, action) {
       break;
 
     case AdministratorsActions.SET_ADMIN_SECURITY:
-      newState = {
-        ...state,
+      const token = action.value.keycloak.token;
+      /* const client = axios.create({
+        baseURL: baseURL,
+        headers: {
+          "Content-Type": 'application/json',
+          "Authorization": `Bearer ${token}`
+        }
+      }); */
+      /* console.log('token', token)  */     
+
+      return Object.assign({}, state, {
         keycloak: action.value.keycloak,
         authenticated: true,
-        roles: action.value.roles
-      };
-      break;
+        roles: action.value.roles,
+        /* client: client */
+      });            
 
     case AdministratorsActions.SET_ADMIN_PROFILE:
       

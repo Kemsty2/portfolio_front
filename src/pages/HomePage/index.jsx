@@ -12,7 +12,7 @@ import { routes, routesSidebar } from "../../global/routes";
 import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 import Keycloak from "keycloak-js";
 import keycloakConfig from "../../utils/keycloak";
-import { setAdminSecurity, setAdminProfile } from "../../redux/actions/";
+import { setAdminSecurity, setAdminProfile, unsetAdminProfile } from "../../redux/actions/";
 import { standard } from "../../variables";
 import DefaultLoading from "../../components/DefaultLoading";
 
@@ -30,11 +30,12 @@ class HomePage extends React.Component {
 
   signOut = e => {
     e.preventDefault();
-    const { profile, history } = this.props;
+    const { profile, history, unsetAdminProfile } = this.props;
 
     if (profile.keycloak) {
       profile.keycloak.logout();
     }
+    unsetAdminProfile();
     history.push("/");
   };
 
@@ -67,12 +68,12 @@ class HomePage extends React.Component {
           setAdminSecurity(keycloak, roles);
           keycloak
             .loadUserInfo()
-            .then(admin => {
-              console.log(admin);
+            .then(admin => {              
               setAdminProfile({
-                name: admin.name,
+                name: admin.preferred_username,
                 email: admin.email,
-                id: admin.sub
+                id: admin.sub,
+                roles
               });
             })
             .catch(error => {});
@@ -136,7 +137,8 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   setAdminSecurity,
-  setAdminProfile
+  setAdminProfile,
+  unsetAdminProfile
 };
 
 export default connect(mapStateToProps, mapActionsToProps)(HomePage);

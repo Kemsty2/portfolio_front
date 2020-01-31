@@ -1,9 +1,9 @@
 import { ProjectsActions } from "../actions/types";
 import lodash from 'lodash'
 const initialState = {
-  listOfProjects: [],
-  numProjects: 0,
-  loading: false
+  listOfProjects: [],  
+  project: {},
+  numProjects: 0  
 };
 
 export function projectsReducer(state = initialState, action) {
@@ -14,6 +14,8 @@ export function projectsReducer(state = initialState, action) {
 
   switch (action.type) {
     case ProjectsActions.ADD_PROJECT:
+      console.log('state', state);
+      console.log("action", action);
       newProject.index = action.project.id;
       available = lodash.findIndex(
         oldState.listOfProjects,
@@ -22,19 +24,16 @@ export function projectsReducer(state = initialState, action) {
 
       if(available === -1){
         // Projet n'est pas dans le store
-        oldState.listOfProjects.push(newProject);
-      }
-      return {
-        ...oldState,
-        loading: true
-      };
-    
-    case ProjectsActions.REMOVE_ALL_PROJECTS:
-      return Object.assign({}, state, {listOfProjects: []});
-    
-    case ProjectsActions.DEFINE_NUM_PROJECTS:
-      oldState.numProjects = action.numProjects;
-      return oldState;
+        return {
+          ...state,
+          project: newProject,
+          listOfProjects: [newProject, ...state.listOfProjects]
+        }
+      }else{
+        return {
+          ...state        
+        };   
+      }         
     
     case ProjectsActions.UPDATE_PROJECT:
       listOfProjects = state.listOfProjects.map((project) => {
@@ -44,6 +43,13 @@ export function projectsReducer(state = initialState, action) {
         return project
       });
       return Object.assign({}, state, {listOfProjects: [...listOfProjects]})
+
+    case ProjectsActions.LISTER_PROJECTS:
+      return Object.assign({}, state, {
+        listOfProjects: action.listOfProjects,
+        numProjects: action.numProjects
+      });
+
     default:
       return state;
   }

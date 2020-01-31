@@ -1,4 +1,4 @@
-import React, { Component } from "./node_modules/react";
+import React, { Component } from "react";
 import {
   Col,
   Label,
@@ -9,10 +9,13 @@ import {
   PaginationItem,
   PaginationLink,
   FormGroup,
-  Input
-} from "./node_modules/reactstrap";
-import swal from "./node_modules/sweetalert";
-import moment from "./node_modules/moment";
+  Input,
+  TabContent,
+  TabPane,
+  Collapse
+} from "reactstrap";
+import swal from "sweetalert";
+import moment from "moment";
 
 export default class CrudTable extends Component {
   constructor(props) {
@@ -26,7 +29,8 @@ export default class CrudTable extends Component {
       closeDate: moment().format("YYYY-MM-DD"),
       item: null,
       channelId: "",
-      actionId: ""
+      actionId: "",
+      statut: 0
     };
   }
 
@@ -63,15 +67,7 @@ export default class CrudTable extends Component {
   }
 
   getRows(idx, typee) {
-    const {
-      search,
-      max_rows,
-      openDate,
-      closeDate,
-      filtre,
-      type,
-      granularite
-    } = this.state;
+    const { search, max_rows, openDate, closeDate } = this.state;
     let page = idx;
     if (typee == "next") page = page + 1;
     if (typee == "previous") page = page - 1;
@@ -119,16 +115,8 @@ export default class CrudTable extends Component {
       columns,
       rows,
       totalItems,
-      status,
-      Modal,
-      showModal,
-      type,
-      SecondModal,
-      addClaim,
-      updateClaim,
-      deleteClaim,
-      resetPinClaim,
-      user
+      status,      
+      filterOpen,      
     } = this.props;
     const {
       currentPage,
@@ -136,103 +124,93 @@ export default class CrudTable extends Component {
       search,
       openDate,
       closeDate,
-      item,
-      channelId,
-      actionId
+      statut
     } = this.state;
     const skipItems = max_rows * currentPage;
     const pages = this.buildPages();
 
     return (
       <div>
-        {Modal && <Modal item={item} {...this.props} />}
-
-        {SecondModal && (
-          <SecondModal
-            actionId={actionId}
-            channelId={channelId}
-            {...this.props}
-          />
-        )}
-
-        {this.props.actions.indexOf("add") != -1 &&
-          (user[addClaim] || user[addClaim] == "true") && (
-            <Row>
-              <Col md={6}>
+        {this.props.actions.indexOf("search") != -1 && (
+          <Collapse isOpen={filterOpen}>
+            <Row className="pt-3">
+              <Col md={3}>
                 <FormGroup>
-                  <Button
-                    type="button"
-                    onClick={e => this.showModal(e)}
-                    style={{ marginTop: "30px" }}
-                    color="primary"
+                  <Label>Rechercher</Label>
+                  <Input
+                    value={search}
+                    onChange={e => this.onChange(e)}
+                    name="search"
+                    onKeyPress={e => this.onKeyPress(e)}
+                    type="text"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={3}>
+                <FormGroup>
+                  <Label for="statut">Statut</Label>
+                  <Input
+                    type="select"
+                    name="statut"
+                    id="statut"
+                    value={statut}
+                    onChange={e => this.onChange(e)}
                   >
-                    <i className="fa fa-plus"></i> Ajouter
-                  </Button>
+                    <option value="1">Sur La Bonne Voie</option>
+                    <option value="2">Sur La Mauvaise Voie</option>
+                    <option value="3">A Risque</option>
+                    <option value="0">Non Défini</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col md={3}>
+                <FormGroup>
+                  <Label>Début</Label>
+                  <Input
+                    value={openDate}
+                    onChange={e => this.onChange(e)}
+                    name="openDate"
+                    type="date"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={3}>
+                <FormGroup>
+                  <Label>Fin</Label>
+                  <Input
+                    value={closeDate}
+                    onChange={e => this.onChange(e)}
+                    name="closeDate"
+                    type="date"
+                  />
                 </FormGroup>
               </Col>
             </Row>
-          )}
-
-        {this.props.actions.indexOf("search") != -1 && (
-          <Row className="pt-3">
-            <Col md={3}>
-              <FormGroup>
-                <Label>Rechercher</Label>
-                <Input
-                  value={search}
-                  onChange={e => this.onChange(e)}
-                  name="search"
-                  onKeyPress={e => this.onKeyPress(e)}
-                  type="text"
-                />
-              </FormGroup>
-            </Col>
-            <Col md={3}>
-              <FormGroup>
-                <Label>Début</Label>
-                <Input
-                  value={openDate}
-                  onChange={e => this.onChange(e)}
-                  name="openDate"
-                  name="openDate"
-                  type="date"
-                />
-              </FormGroup>
-            </Col>
-            <Col md={3}>
-              <FormGroup>
-                <Label>Fin</Label>
-                <Input
-                  value={closeDate}
-                  onChange={e => this.onChange(e)}
-                  name="closeDate"
-                  type="date"
-                />
-              </FormGroup>
-            </Col>
-
-            <Col>
-              <Col className="pt-4" md={3}>
-                <FormGroup>
-                  <Button onClick={e => this.getRows(0, "")} color="primary">
-                    {" "}
-                    Actualiser
-                  </Button>
-                </FormGroup>
+            <Row className="justify-content-center">
+              <Col md={3}>
+                <Button
+                  block
+                  onClick={e => this.getRows(0, "")}
+                  color="primary"
+                >
+                  {" "}
+                  <i className="fa fa-sync-alt mr-2 d-inline"></i>
+                  <span>Actualiser</span>
+                </Button>
               </Col>
-            </Col>
-          </Row>
+            </Row>
+          </Collapse>
         )}
 
         <div>
           <Table
             style={{ tableLayout: rows.length ? "fixed" : "" }}
             className="mt-3"
-            responsive
             hover
+            bordered
           >
             <thead>
-              <tr>
+              <tr className="text-primary">
                 {columns.map((item, idx) => (
                   <th key={idx} scope="col">
                     {item.title}
@@ -253,42 +231,36 @@ export default class CrudTable extends Component {
                       </td>
                     ))}
                     <td>
-                      {this.props.actions.indexOf("edit") != -1 &&
-                        (user[updateClaim] || user[updateClaim] == "true") && (
-                          <a
-                            href="#"
-                            title="Modifier l'élément"
-                            onClick={e => this.showModal(e, row)}
-                            className="btn btn-primary"
-                          >
-                            {" "}
-                            <i className="fa fa-pencil"></i>{" "}
-                          </a>
-                        )}{" "}
-                      {this.props.actions.indexOf("resetpin") != -1 &&
-                        (user[resetPinClaim] ||
-                          user[resetPinClaim] == "true") && (
-                          <a
-                            href="#"
-                            title="Reset Pin"
-                            onClick={e => this.showResetModal(e, row)}
-                            className="btn btn-primary"
-                          >
-                            {" "}
-                            <i className="fa fa-refresh"></i>{" "}
-                          </a>
-                        )}{" "}
-                      {this.props.actions.indexOf("delete") != -1 &&
-                        (user[deleteClaim] || user[deleteClaim] == "true") && (
-                          <a
-                            href="#"
-                            title="Supprimer l'élément"
-                            onClick={e => this.deleteRow(e, row)}
-                            className="btn btn-danger"
-                          >
-                            <i className="fa fa-trash"></i>
-                          </a>
-                        )}
+                      {this.props.actions.indexOf("edit") != -1 && (
+                        <a
+                          href="#"
+                          title="Modifier l'élément"                          
+                          className="btn btn-primary"
+                        >
+                          {" "}
+                          <i className="fa fa-pencil-alt"></i>{" "}
+                        </a>
+                      )}{" "}
+                      {this.props.actions.indexOf("resetpin") != -1 && (
+                        <a
+                          href="#"
+                          title="Reset Pin"                          
+                          className="btn btn-primary"
+                        >
+                          {" "}
+                          <i className="fa fa-refresh"></i>{" "}
+                        </a>
+                      )}{" "}
+                      {this.props.actions.indexOf("delete") != -1 && (
+                        <a
+                          href="#"
+                          title="Supprimer l'élément"
+                          onClick={e => this.deleteRow(e, row)}
+                          className="btn btn-danger"
+                        >
+                          <i className="fa fa-trash"></i>
+                        </a>
+                      )}
                     </td>
                   </tr>
                 ))}

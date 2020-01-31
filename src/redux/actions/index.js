@@ -1,2 +1,3 @@
 export {setAdminDetails, setAdminProfile, setAdminSecurity, unsetAdminDetails, unsetAdminProfile} from './layout';
-export {addProject, updateProject, defineNumProjects, removeAllProjects} from './projects';
+export {addProject, updateProject, listerProjets} from './projects';
+export {failAdd, successAdd, pendingAdd} from './messages';
