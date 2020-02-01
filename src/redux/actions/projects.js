@@ -97,9 +97,10 @@ const mockProjects = [
 export function addProject(data) {
   return (dispatch, getState) => {
     const client = getState().profile.client;
+    console.log('data', data);
     dispatch({ type: MessagesActions.PENDING_ADD, message: "Action en cours" });
-    /* return client
-      .post("/api/projet", data)
+    return client
+      .post("/api/Projet", data)
       .then(response => {
         dispatch({
           type: ProjectsActions.ADD_PROJECT,
@@ -118,28 +119,22 @@ export function addProject(data) {
             (err.response && err.response.data) ||
             "La création du projet a échouée"
         });
-      }); */
-      dispatch({
-        type: ProjectsActions.ADD_PROJECT,
-        project: data
-      });
-      return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "" });
+      });      
   };
 }
 
 export function listerProjets(data) {
   return (dispatch, getState) => {
     console.log(getState().profile.client.defaults);
-    const client = getState().profile.client;
-    console.log(client);
-    dispatch({ type: MessagesActions.PENDING_ADD, message: "Action en cours" });    
-    dispatch({type: ProjectsActions.LISTER_PROJECTS, listOfProjects: mockProjects, numProjects: mockProjects.length})
-    return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "" });
-    /* return client
+    const client = getState().profile.client;    
+    dispatch({ type: MessagesActions.PENDING_ADD, message: "Action en cours" });        
+    return client
       .get(
-        `/api/projet?skip_rows=${data.skip_rows}&max_rows=${data.max_rows}&search=${data.search}`
+        `/api/Projet?Skip=${data.skip_rows}&Max=${data.max_rows}&Search=${data.search}`
       )
       .then(response => {
+        console.log("data", data);
+        console.log("response", response.data);
         if (data.skip_rows < -1) {
           let rows = [];
 
@@ -155,11 +150,11 @@ export function listerProjets(data) {
           let csvContent = rows.map(e => e.join(";")).join("\n"),
             blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
 
-          saveAs(blob, "export_" + new Date() + ".csv"); 
+          //saveAs(blob, "export_" + new Date() + ".csv"); 
         } else {
           dispatch({
             type: ProjectsActions.LISTER_PROJECTS,
-            listOfProjects: response.data,
+            listOfProjects: response.data.data,
             numProjects: response.data.total
           });
         }
@@ -173,7 +168,7 @@ export function listerProjets(data) {
             (err.response && err.response.data) ||
             "Une erreur inattendue est survenue"
         });
-      }); */
+      });
   };
 }
 

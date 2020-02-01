@@ -27,7 +27,7 @@ class ProjectNew extends React.PureComponent {
 
     this.state = {
       fields: {
-        name: {
+        objet: {
           value: "",
           error: null
         },
@@ -65,7 +65,6 @@ class ProjectNew extends React.PureComponent {
         this.props.history.push('/projects');
       }
     }
-
   }
 
   onSubmit = event => {
@@ -130,16 +129,16 @@ class ProjectNew extends React.PureComponent {
                       <FormGroup>
                         <label>Nom du Projet</label>
                         <Input
-                          name="name"
+                          name="objet"
                           placeholder="Nom Projet"
                           type="text"
                           onChange={this.onChange}
-                          value={fields["name"]["value"]}
-                          invalid={fields["name"]["error"] !== null}
+                          value={fields["objet"]["value"]}
+                          invalid={fields["objet"]["error"] !== null}
                         />
                         <FormFeedback>
-                          {fields["name"]["error"] !== null
-                            ? fields["name"]["error"]
+                          {fields["objet"]["error"] !== null
+                            ? fields["objet"]["error"]
                             : ""}
                         </FormFeedback>
                       </FormGroup>

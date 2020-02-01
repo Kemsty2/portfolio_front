@@ -1,6 +1,6 @@
 const constraints = {
   projectNew: {
-    name: {
+    objet: {
       presence: true,
       length: {        
         minimum: 1,
