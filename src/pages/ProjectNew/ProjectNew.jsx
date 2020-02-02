@@ -14,11 +14,11 @@ import {
   FormFeedback
 } from "reactstrap";
 import { connect } from "react-redux";
-import { addProject, updateProject } from "../../../../../redux/actions";
+import { addProject, updateProject } from "../../redux/actions";
 import {
   validateField,
   isFormValid
-} from "../../../../../validation/validator";
+} from "../../validation/validator";
 import lodash from 'lodash';
 
 class ProjectNew extends React.PureComponent {
@@ -210,8 +210,7 @@ class ProjectNew extends React.PureComponent {
                         <Label for="clientSelect">Client</Label>
                         <Input
                           name="client"
-                          type="select"
-                          name="client"
+                          type="select"                          
                           id="clientSelect"
                           value={fields["client"]["value"]}
                           invalid={fields["client"]["error"] !== null}
@@ -234,8 +233,7 @@ class ProjectNew extends React.PureComponent {
                         <Label for="statutSelect">Statut</Label>
                         <Input
                           name="statut"
-                          type="select"
-                          name="statut"
+                          type="select"                          
                           id="statutSelect"
                           value={fields["statut"]["value"]}
                           invalid={fields["statut"]["error"] !== null}

@@ -1,16 +1,16 @@
-import Home from "../pages/HomePage/components/Home";
-import ProjectsPage from "../pages/ProjectsPage";
-import ProjectList from "../pages/ProjectsPage/components/ProjectList/ProjectList";
-import RoadMapPage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/RoadmapPage";
-import WorksPackagePage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage/WorksPackagePage";
-import MembersPage from "../pages/ProjectsPage/components/ProjectList/components/Project/components/MembersPage/MembersPage";
-import Project from "../pages/ProjectsPage/components/ProjectList/components/Project";
-import ProjectNew from "../pages/ProjectsPage/components/ProjectList/components/ProjectNew";
-import WorkPackageList from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage/components/WorkPackageList";
-import CreateWork from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage/components/CreateWork";
-import Work from "../pages/ProjectsPage/components/ProjectList/components/Project/components/WorksPackagePage/components/Work";
-import MembersList from "../pages/ProjectsPage/components/ProjectList/components/Project/components/MembersPage/components/MemberList";
-import Member from "../pages/ProjectsPage/components/ProjectList/components/Project/components/MembersPage/components/Member";
+import Home from "../pages/Home/Home";
+import ProjectsContainer from "../containers/Projects/ProjectContainer";
+import ProjectList from "../pages/ProjectList/ProjectList";
+import ProjectNew from "../pages/ProjectNew/ProjectNew";
+import VueGlobale from "../pages/Project/VueGlobale";
+import RoadMap from "../pages/Project/RoadMap";
+import WorksPackageContainer from "../containers/WorksPackage/WorkPackageContainer";
+import WorkPackageList from "../pages/WorkPackageList/WorkPackageList";
+import WorkNew from "../pages/WorkNew/WorkNew";
+import Work from "../pages/Work/Work";
+import MembersContainer from "../containers/Members/MembersContainer";
+import MembersList from "../pages/MemberList/MemberList";
+import Member from "../pages/Member/Member";
 
 export const routesSidebar = [
   { path: "/", icon: "test", name: "Accueil", layout: "" },
@@ -52,7 +52,7 @@ export const routes = [
     path: "/projects",
     name: "Liste Projets",
     layout: "",
-    component: ProjectsPage,
+    component: ProjectsContainer,
     exact: false,
     routes: [
       {
@@ -73,20 +73,20 @@ export const routes = [
         path: "/projects/:idProject",
         name: "Vue Globale",
         layout: "/projects",
-        component: Project,
+        component: VueGlobale,
         exact: true
       },
       {
         path: "/projects/:idProject/roadmap",
         name: "Feuille de route",
-        component: RoadMapPage,
+        component: RoadMap,
         layout: "/projects",
         exact: true
       },
       {
         path: "/projects/:idProject/workpackages",
         name: "Lots de Travaux",
-        component: WorksPackagePage,
+        component: WorksPackageContainer,
         layout: "/projects",
         routes: [
           {
@@ -99,7 +99,7 @@ export const routes = [
           {
             path: "/projects/:idProject/workpackages/create_new",
             name: "Lots de Travaux",
-            component: CreateWork,
+            component: WorkNew,
             layout: "/projects",
             exact: true
           },
@@ -109,20 +109,13 @@ export const routes = [
             component: Work,
             layout: "/projects",
             exact: true
-          },
-          {
-            path: "/projects/:idProject/workpackages/report",
-            name: "Lots de Travaux",
-            component: WorkPackageList,
-            layout: "/projects",
-            exact: true
           }
         ]
       },
       {
         path: "/projects/:idProject/members",
         name: "Membres",
-        component: MembersPage,
+        component: MembersContainer,
         layout: "/projects",        
         routes: [
           {
@@ -135,6 +128,13 @@ export const routes = [
           {
             path: "/projects/:idProject/members/:idmembers",
             name: "Lots de Travaux",
+            component: Member,
+            layout: "/projects",
+            exact: true
+          },    
+          {
+            path: "/projects/:idProject/members/new",
+            name: "Ajout Membre",
             component: Member,
             layout: "/projects",
             exact: true

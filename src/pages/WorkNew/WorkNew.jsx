@@ -1,10 +1,6 @@
 import React from "react";
 import {useQuery} from '../../../../../../../../../utils/utilsRouter';
-class CreateWork extends React.Component {
-  
-  constructor(props){
-    super(props);
-  }
+class WorkNew extends React.Component {  
 
   componentDidMount(){
     let query = useQuery('type');
@@ -17,4 +13,4 @@ class CreateWork extends React.Component {
   }
 }
 
-export default CreateWork;
+export default WorkNew;

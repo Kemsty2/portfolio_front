@@ -1,13 +1,9 @@
 import React from "react";
 import {Switch} from 'react-router-dom';
-import { RouteWithSubRoutes } from "../../../../../../../../utils/utilsComponents";
+import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 
 
-class MembersPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
+class MembersContainer extends React.Component {  
   render() {
     return (
       <Switch>
@@ -19,4 +15,4 @@ class MembersPage extends React.Component {
   }
 }
 
-export default MembersPage;
+export default MembersContainer;

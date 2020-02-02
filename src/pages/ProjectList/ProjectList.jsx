@@ -5,18 +5,17 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardBody,
-  Table,
+  CardBody,  
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import CrudTable from "../../../../components/CrudTable";
+import CrudTable from "../../components/CrudTable";
 import {
   listerProjets,
   addProject,
   updateProject
-} from "../../../../redux/actions/";
+} from "../../redux/actions";
 
 const columns = [
   { nom: "objet", title: "Nom" },
@@ -82,7 +81,7 @@ const mapStateToProps = state => {
   //  State Messages
   const sm = state.message,
     //  State Project
-    sp = state.project, su = state.profile;
+    sp = state.project;
     console.log("projects", sp);
 
 

@@ -4,26 +4,28 @@ import { Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { isEmpty, isArray, isString } from "lodash";
 
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
-import Sidebar from "../../components/Sidebar/Sidebar";
-
 import { routes, routesSidebar } from "../../global/routes";
 import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 import Keycloak from "keycloak-js";
 import keycloakConfig from "../../utils/keycloak";
-import { setAdminSecurity, setAdminProfile, unsetAdminProfile } from "../../redux/actions/";
+import {
+  setAdminSecurity,
+  setAdminProfile,
+  unsetAdminProfile
+} from "../../redux/actions";
 import { standard } from "../../variables";
 import DefaultLoading from "../../components/DefaultLoading";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import Sidebar from "../../components/Sidebar/Sidebar";
 
-let ps;
-
-class HomePage extends React.Component {
+class HomeContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       backgroundColor: "black",
-      activeColor: "warning"
+      activeColor: "warning",
+      ps: null
     };
     this.mainPanel = React.createRef();
   }
@@ -44,10 +46,11 @@ class HomePage extends React.Component {
     console.log("profile", profile);
     if (profile) {
       if (navigator.platform.indexOf("Win") > -1) {
-        if(ps){
-          ps = new PerfectScrollbar(this.mainPanel.current);
-          document.body.classList.toggle("perfect-scrollbar-on");
-        }        
+        let ps = new PerfectScrollbar(this.mainPanel.current);
+        this.setState({
+          ps: ps
+        });
+        document.body.classList.toggle("perfect-scrollbar-on");
       }
     }
 
@@ -68,7 +71,7 @@ class HomePage extends React.Component {
           setAdminSecurity(keycloak, roles);
           keycloak
             .loadUserInfo()
-            .then(admin => {              
+            .then(admin => {
               setAdminProfile({
                 name: admin.preferred_username,
                 email: admin.email,
@@ -85,7 +88,7 @@ class HomePage extends React.Component {
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
+      this.state.ps.destroy();
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
@@ -141,4 +144,4 @@ const mapActionsToProps = {
   unsetAdminProfile
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(HomePage);
+export default connect(mapStateToProps, mapActionsToProps)(HomeContainer);

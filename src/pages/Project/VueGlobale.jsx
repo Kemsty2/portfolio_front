@@ -5,19 +5,14 @@ import {
   Col,
   CardHeader,
   CardTitle,
-  CardBody,
-  Input,
-  Table,
-  Button
+  CardBody,  
+  Table,  
 } from "reactstrap";
 import Select from "react-select";
 import { colourStyles } from "../../../../../utils/utilsSelect";
 import { Link } from "react-router-dom";
 
-class Project extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class VueGlobale extends React.Component {  
 
   render() {
     const options = [
@@ -156,4 +151,4 @@ class WorkTr extends React.Component {
   }
 }
 
-export default Project;
+export default VueGlobale;

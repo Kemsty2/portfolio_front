@@ -1,12 +1,9 @@
 import React from "react";
-import {Row, Col, Card, CardHeader, CardTitle, CardBody, Table, Button} from 'reactstrap';
+import {Row, Col, Card, CardHeader, CardTitle, CardBody, Table} from 'reactstrap';
 import MemberTr from "./MemberTr";
 import { Link } from "react-router-dom";
 
-class MembersList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class MembersList extends React.Component {  
 
   render() {
     return (

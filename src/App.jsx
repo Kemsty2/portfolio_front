@@ -15,7 +15,7 @@ const initialState = window.initialReduxState;
 const store = configureStore(history, initialState);
 
 const HomePage = Loadable({
-  loader: () => import('./pages/HomePage'),
+  loader: () => import('./containers/Home/HomeContainer'),
   loading
 });
 

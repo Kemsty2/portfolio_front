@@ -1,6 +1,6 @@
 import { ProjectsActions, MessagesActions } from "./types";
 
-const mockProjects = [
+/* const mockProjects = [
   {
     id: "00000000-0000-0000-0000-000000000001",
     objet: "test",
@@ -92,7 +92,7 @@ const mockProjects = [
     createdAt: new Date().toUTCString(),
     updateAt:  new Date().toUTCString(),
   }  
-];
+]; */
 
 export function addProject(data) {
   return (dispatch, getState) => {

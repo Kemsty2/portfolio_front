@@ -2,10 +2,7 @@ import React from "react";
 import { Switch } from "react-router-dom";
 import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 
-class ProjectsPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class ProjectsContainer extends React.Component {  
 
   render() {
     return (
@@ -18,4 +15,4 @@ class ProjectsPage extends React.Component {
   }
 }
 
-export default ProjectsPage;
+export default ProjectsContainer;
