@@ -141,14 +141,14 @@ export function listerProjets(data) {
           for (let k = 0; k < response.data.length; k++) {
             const element = response.data[k];
 
-            if (k == 0) {
+            if (k === 0) {
               rows.push(Object.keys(element));
             }
 
             rows.push(Object.values(element));
           }
-          let csvContent = rows.map(e => e.join(";")).join("\n"),
-            blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+          /* let csvContent = rows.map(e => e.join(";")).join("\n"),
+            blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" }); */
 
           //saveAs(blob, "export_" + new Date() + ".csv"); 
         } else {
