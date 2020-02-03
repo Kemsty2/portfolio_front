@@ -16,7 +16,7 @@ export function projectsReducer(state = initialState, action) {
     case ProjectsActions.ADD_PROJECT:
       console.log('state', state);
       console.log("action", action);
-      newProject.index = action.project.id;
+      newProject.id = action.project.id;
       available = lodash.findIndex(
         oldState.listOfProjects,
         action.project
@@ -44,12 +44,16 @@ export function projectsReducer(state = initialState, action) {
       });
       return Object.assign({}, state, {listOfProjects: [...listOfProjects]})
 
+    case ProjectsActions.DEFINE_NUM_PROJECTS:      
+      return Object.assign({}, state, {numProjects: action.numProjects});
+      
+    case ProjectsActions.REMOVE_ALL_PROJECTS:
+      return Object.assign({}, state, {listOfProjects: []});
+    
     case ProjectsActions.LISTER_PROJECTS:
       return Object.assign({}, state, {
-        listOfProjects: action.listOfProjects,
-        numProjects: action.numProjects
-      });
-
+        listOfProjects: action.listOfProjects,        
+      })
     default:
       return state;
   }

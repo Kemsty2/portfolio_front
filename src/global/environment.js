@@ -1,0 +1,1 @@
+export const BACKEND_API = "http://5e37292e22cb420014311c7c.mockapi.io/api/";

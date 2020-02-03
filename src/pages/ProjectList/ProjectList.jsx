@@ -1,89 +1,15 @@
-import React from "react";
-import {
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,  
-  Button
-} from "reactstrap";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import CrudTable from "../../components/CrudTable";
-import {
-  listerProjets,
-  addProject,
-  updateProject
-} from "../../redux/actions";
-
-const columns = [
-  { nom: "objet", title: "Nom" },
-  { nom: "", title: "Statut" },
-  { nom: "createdAt", title: "Crée Le" },
-  { nom: "", title: "Responsable" }
-];
-
-class ProjectList extends React.Component {
-  constructor(props) {
-    super(props);    
-
-    this.state = {
-      filterOpen: false
-    }
-  }  
-
-  setFilterOpen = (filterOpen) => {
-    this.setState({
-      filterOpen
-    })
-  }
-
-  toggle = (e) => {
-    e.preventDefault();
-
-    this.setFilterOpen(!this.state.filterOpen)
-  };
-
-  render() {
-    return (
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader className="d-flex justify-content-between bg-black">
-                <CardTitle tag="h4">Projets</CardTitle>
-                <div>
-                  <Link to="/projects/new" className="btn btn-success">
-                    <i className="fa fa-plus mr-1 d-inline"></i>
-                    <span>Créer Projet</span>
-                  </Link>
-                  <Button onClick={(e) => this.toggle(e)}><i className="fa fa-filter mr-1 d-inline"></i> Filtrer</Button>
-                </div>
-              </CardHeader>
-              <CardBody>
-                <CrudTable
-                  actions={["edit", "delete", "search"]}
-                  {...this.props}
-                  columns={columns}
-                  filterOpen={this.state.filterOpen}
-                />
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
-}
+import { listerProjects } from "../../redux/actions";
+import ProjectListStatic from "./ProjectListStatic";
+import { MessagesActions } from "../../redux/actions/types";
+import { getProjectsAPI } from "../../api/project";
+import { defineNumProjects } from "../../redux/actions/projects";
 
 const mapStateToProps = state => {
   //  State Messages
   const sm = state.message,
     //  State Project
     sp = state.project;
-    console.log("projects", sp);
-
 
   return {
     message: sm.message,
@@ -95,9 +21,33 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  onEvent: data => dispatch(listerProjets(data)),
-  create: d => dispatch(addProject(d)),
-  update: d => dispatch(updateProject(d))
+
+  onEvent: async data => {
+    try {
+      console.log("data", data);
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: "Action en Cours"
+      });
+
+      const listOfProjects = await getProjectsAPI(data);
+      dispatch(defineNumProjects(listOfProjects.length));
+
+      console.log("listOfProjects", listOfProjects);
+      if (data.skip_rows < -1) {        
+      } else {
+        dispatch(listerProjects(listOfProjects));
+      }
+      return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "La liste des projets a été chargé" });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  }  
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectList);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectListStatic);

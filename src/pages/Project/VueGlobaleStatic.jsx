@@ -12,7 +12,7 @@ import Select from "react-select";
 import { colourStyles } from "../../utils/utilsSelect";
 import { Link } from "react-router-dom";
 
-class VueGlobale extends React.Component {  
+class VueGlobaleStatic extends React.Component {  
 
   componentDidMount(){
     const {idProject} = this.props.match.params;
@@ -156,4 +156,4 @@ class WorkTr extends React.Component {
   }
 }
 
-export default VueGlobale;
+export default VueGlobaleStatic;

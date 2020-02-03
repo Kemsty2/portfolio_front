@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteWithSubRoutes } from "../../../../../../../../utils/utilsComponents";
+import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 import { Switch } from "react-router";
 
 class WorksPackageContainer extends React.Component {  

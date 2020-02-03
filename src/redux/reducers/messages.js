@@ -10,7 +10,7 @@ const initialState = {
 export const messagesReducer = (state = initialState, action = {}) => {
   switch (action.type) {
     case MessagesActions.SUCCESS_ADD:
-      if (action.message) toast.info(action.message);
+      if (action.message) toast.success(action.message);
       return {
         ...state,
         status: "success",
@@ -28,6 +28,7 @@ export const messagesReducer = (state = initialState, action = {}) => {
       };
 
     case MessagesActions.PENDING_ADD:
+      if(action.message) toast.info(action.message);
       return {
         ...state,
         status: "pending",

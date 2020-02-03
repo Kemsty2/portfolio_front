@@ -2,6 +2,8 @@ export const ProjectsActions = {
   ADD_PROJECT: "@projects/add_project",
   UPDATE_PROJECT: "@projects/update_project",
   LISTER_PROJECTS: "@projects/lister_projets",  
+  REMOVE_ALL_PROJECTS: "@projects/remove_all",
+  DEFINE_NUM_PROJECTS: "@projects/define_num_projects"
 };
 
 export const MessagesActions = {
