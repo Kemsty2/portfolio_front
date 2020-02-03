@@ -55,7 +55,7 @@ class HomeContainer extends React.Component {
     }
 
     const keycloak = Keycloak(keycloakConfig);
-    keycloak
+    /* keycloak
       .init({ onLoad: "login-required", promiseType: "native" })
       .then(authenticated => {
         if (authenticated) {
@@ -84,7 +84,7 @@ class HomeContainer extends React.Component {
       })
       .catch(error => {
         console.log(error);
-      });
+      }); */
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -108,7 +108,7 @@ class HomeContainer extends React.Component {
     const { profile } = this.props;
     return (
       <div className="wrapper">
-        {profile.authenticated ? (
+        {/* {profile.authenticated ? (
           <>
             <Sidebar
               {...this.props}
@@ -128,7 +128,22 @@ class HomeContainer extends React.Component {
           </>
         ) : (
           <DefaultLoading />
-        )}
+        )} */}
+        <Sidebar
+          {...this.props}
+          routes={routesSidebar}
+          bgColor={this.state.backgroundColor}
+          activeColor={this.state.activeColor}
+        />
+        <div className="main-panel" ref={this.mainPanel}>
+          <Header {...this.props} onLogout={e => this.signOut(e)} />
+          <Switch>
+            {routes.map((prop, key) => (
+              <RouteWithSubRoutes {...prop} key={key} />
+            ))}
+          </Switch>
+          <Footer fluid />
+        </div>
       </div>
     );
   }
