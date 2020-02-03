@@ -19,13 +19,13 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import Sidebar from "../../components/Sidebar/Sidebar";
 
+var ps;
 class HomeContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       backgroundColor: "black",
-      activeColor: "warning",
-      ps: null
+      activeColor: "warning",      
     };
     this.mainPanel = React.createRef();
   }
@@ -42,20 +42,14 @@ class HomeContainer extends React.Component {
   };
 
   componentDidMount() {
-    const { setAdminSecurity, setAdminProfile, history, profile } = this.props;
-    console.log("profile", profile);
-    if (profile) {
-      if (navigator.platform.indexOf("Win") > -1) {
-        let ps = new PerfectScrollbar(this.mainPanel.current);
-        this.setState({
-          ps: ps
-        });
-        document.body.classList.toggle("perfect-scrollbar-on");
-      }
+    const { setAdminSecurity, setAdminProfile, history, profile } = this.props;    
+    if (navigator.platform.indexOf("Win") > -1) {
+      //ps = new PerfectScrollbar(this.mainPanel.current);        
+      document.body.classList.toggle("perfect-scrollbar-on");
     }
 
     const keycloak = Keycloak(keycloakConfig);
-    /* keycloak
+    keycloak
       .init({ onLoad: "login-required", promiseType: "native" })
       .then(authenticated => {
         if (authenticated) {
@@ -76,7 +70,8 @@ class HomeContainer extends React.Component {
                 name: admin.preferred_username,
                 email: admin.email,
                 id: admin.sub,
-                roles
+                roles,
+                token: keycloak.token
               });
             })
             .catch(error => {});
@@ -84,11 +79,11 @@ class HomeContainer extends React.Component {
       })
       .catch(error => {
         console.log(error);
-      }); */
+      });
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
-      this.state.ps.destroy();
+      //ps.destroy();
       document.body.classList.toggle("perfect-scrollbar-on");
     }
   }
@@ -108,7 +103,7 @@ class HomeContainer extends React.Component {
     const { profile } = this.props;
     return (
       <div className="wrapper">
-        {/* {profile.authenticated ? (
+        {profile.authenticated ? (
           <>
             <Sidebar
               {...this.props}
@@ -128,8 +123,8 @@ class HomeContainer extends React.Component {
           </>
         ) : (
           <DefaultLoading />
-        )} */}
-        <Sidebar
+        )}
+        {/* <Sidebar
           {...this.props}
           routes={routesSidebar}
           bgColor={this.state.backgroundColor}
@@ -143,7 +138,7 @@ class HomeContainer extends React.Component {
             ))}
           </Switch>
           <Footer fluid />
-        </div>
+        </div> */}
       </div>
     );
   }

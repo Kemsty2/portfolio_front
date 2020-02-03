@@ -15,8 +15,9 @@ import {
 import swal from "sweetalert";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
-export default class CrudTable extends Component {
+class CrudTable extends Component {
   constructor(props) {
     super(props);
 
@@ -33,8 +34,8 @@ export default class CrudTable extends Component {
     };
   }
 
-  async componentDidMount() {
-    await this.getRows(0, "current");
+  async componentDidMount() {    
+    await this.getRows(0, "current");   
   }
 
   deleteRow(e, row) {
@@ -73,10 +74,10 @@ export default class CrudTable extends Component {
     await this.props.onEvent({
       max_rows,
       search,
-      skip_rows: page + 1,
+      skip_rows: page,
       openDate,
       closeDate
-    });
+    }, this.props.token);
     if (page >= 0) this.setState({ currentPage: page });
   }
 
@@ -392,3 +393,15 @@ export default class CrudTable extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    token: state.profile.keycloak.token
+  }
+};
+
+const mapActionsToProps = {  
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(CrudTable);

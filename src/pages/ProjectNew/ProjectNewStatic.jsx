@@ -86,8 +86,9 @@ class ProjectNewStatic extends React.PureComponent {
       }
       return;
     } */
-    let newProject = lodash.mapValues(fields, "value");
-    this.props.create(newProject);
+    let fieldObjet = lodash.mapValues(fields, "value");
+    let payload = {...fieldObjet, id: '00000000-0000-0000-0000-000000000000'}
+    this.props.create(payload, this.props.user.token);
   };
 
   onChange = event => {

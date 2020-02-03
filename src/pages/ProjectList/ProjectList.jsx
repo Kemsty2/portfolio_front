@@ -9,20 +9,20 @@ const mapStateToProps = state => {
   //  State Messages
   const sm = state.message,
     //  State Project
-    sp = state.project;
+    sp = state.project, su = state.profile;
 
   return {
     message: sm.message,
     status: sm.status,
     rows: sp.listOfProjects,
     totalItems: sp.numProjects,
-    user: state.admin
+    user: su.user
   };
 };
 
 const mapDispatchToProps = dispatch => ({
 
-  onEvent: async data => {
+  onEvent: async (data,token) => {
     try {
       console.log("data", data);
       dispatch({
@@ -30,13 +30,13 @@ const mapDispatchToProps = dispatch => ({
         message: "Action en Cours"
       });
 
-      const listOfProjects = await getProjectsAPI(data);
-      dispatch(defineNumProjects(listOfProjects.length));
+      const result = await getProjectsAPI(data, token);
+      dispatch(defineNumProjects(result.total));
 
-      console.log("listOfProjects", listOfProjects);
+      console.log("listOfProjects", result);
       if (data.skip_rows < -1) {        
       } else {
-        dispatch(listerProjects(listOfProjects));
+        dispatch(listerProjects(result.data));
       }
       return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "La liste des projets a été chargé" });
     } catch (err) {

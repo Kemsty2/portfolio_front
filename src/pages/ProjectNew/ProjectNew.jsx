@@ -12,7 +12,7 @@ const mapStateToProps = state => {
   return {
     message: sm.message,
     status: sm.status,
-    user: su.admin
+    user: su.user
   };
 };
 

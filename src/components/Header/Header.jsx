@@ -86,7 +86,7 @@ class Header extends React.Component {
     }
   }
   render() {
-    const {onLogout, admin} = this.props;
+    const {onLogout, user} = this.props;
 
     return (
       // add or remove classes depending if we are on full-screen-maps page or not
@@ -154,10 +154,10 @@ class Header extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem header> User Profile</DropdownItem>
-                  {admin && (
+                  {user && (
                     <>
-                      <DropdownItem disabled><i className="fa fa-at mr-2"></i>{admin.name}</DropdownItem>
-                      <DropdownItem disabled><i className="fa fa-envelope mr-2"></i>{admin.email}</DropdownItem>
+                      <DropdownItem disabled><i className="fa fa-at mr-2"></i>{user.name}</DropdownItem>
+                      <DropdownItem disabled><i className="fa fa-envelope mr-2"></i>{user.email}</DropdownItem>
                     </>
                   )}
                   <DropdownItem header> Manage Account</DropdownItem>
@@ -183,7 +183,7 @@ class Header extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  admin: state.profile.admin
+  user: state.profile.user
 });
 
 export default connect(mapStateToProps)(Header);
