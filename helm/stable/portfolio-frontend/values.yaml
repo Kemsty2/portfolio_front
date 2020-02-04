@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: devopstools.adcm.orangecm:32000/digitalisation/portfolio-frontend
+  repository: devopstools.adcm.orangecm:32000/digitalisation/portfolio-frontend:latest
   tag: latest
   pullPolicy: Always
 
