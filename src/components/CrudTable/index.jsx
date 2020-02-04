@@ -394,8 +394,7 @@ class CrudTable extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log(state);
+const mapStateToProps = state => {  
   return {
     token: state.profile.keycloak.token
   }

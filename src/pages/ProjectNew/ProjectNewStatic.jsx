@@ -15,12 +15,29 @@ import {
 } from "reactstrap";
 import { validateField, isFormValid } from "../../validation/validator";
 import lodash from "lodash";
+import DefaultLoading from "../../components/DefaultLoading";
+import Select, {components} from "react-select";
+import SuggestComponent from "../../components/Suggestions/SuggestComponent";
 
-class ProjectNewStatic extends React.PureComponent {
+const groupStyles = {
+  border: `2px dotted #2c2c2c`,
+  borderRadius: "5px",
+  background: "#f2fcff"
+};
+
+const Group = props => (
+  <div style={groupStyles}>
+    <components.Group {...props} />
+  </div>
+);
+
+class ProjectNewStatic extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      selectedOption: {label: '', value: ''},
+      isLoading: false,
       fields: {
         objet: {
           value: "",
@@ -34,24 +51,43 @@ class ProjectNewStatic extends React.PureComponent {
           value: "",
           error: null
         },
-        objectif: {
+        objectifs: {
           value: "",
           error: null
-        },
-        statut: {
-          value: "",
-          error: null
-        },
-        client: {
-          value: "",
+        },        
+        clientId: {
+          value: "00000000-0000-0000-0000-000000000000",
+          label: "",
           error: null
         },
         beneficeClient: {
           value: "",
           error: null
+        },
+        type: {
+          value: "",
+          error: null
+        },
+        chefProjetCuid: {
+          value: "",
+          error: null
+        },
+        pourcentageCompletion: {
+          value: 0,
+          error: null
         }
       }
     };
+  }
+
+  async componentDidMount() {
+    this.setState({
+      isLoading: true
+    });
+    await this.props.getStatuts(this.props.token);
+    this.setState({
+      isLoading: false
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -60,6 +96,13 @@ class ProjectNewStatic extends React.PureComponent {
         this.props.history.push("/projects");
       }
     }
+  }
+
+  handleChange(selectedOption) {
+    this.setState({
+      selectedOption: selectedOption
+    });
+    console.log(this.state.selectedOption);    
   }
 
   onSubmit = event => {
@@ -87,7 +130,8 @@ class ProjectNewStatic extends React.PureComponent {
       return;
     } */
     let fieldObjet = lodash.mapValues(fields, "value");
-    let payload = {...fieldObjet, id: '00000000-0000-0000-0000-000000000000'}
+    let payload = { ...fieldObjet };
+    console.log(payload);
     this.props.create(payload, this.props.user.token);
   };
 
@@ -109,8 +153,16 @@ class ProjectNewStatic extends React.PureComponent {
   };
 
   render() {
-    const { fields } = this.state;
-    return (
+    const { fields, isLoading } = this.state;
+
+    /* const statutsOptions = this.props.listOfStatuts.map((statut, id) => {
+      return (
+      <option key={id} value={statut.id}>{statut.name}</option>
+      )
+    }) */
+    return isLoading ? (
+      <DefaultLoading />
+    ) : (
       <div className="content">
         <Row>
           <Col md="12">
@@ -165,16 +217,16 @@ class ProjectNewStatic extends React.PureComponent {
                       <FormGroup>
                         <label>Objectifs du Projet</label>
                         <Input
-                          name="objectif"
+                          name="objectifs"
                           type="textarea"
                           placeholder="Vision, chiffres, clés, unités, mesures, spécifications"
-                          value={fields["objectif"]["value"]}
-                          invalid={fields["objectif"]["error"] !== null}
+                          value={fields["objectifs"]["value"]}
+                          invalid={fields["objectifs"]["error"] !== null}
                           onChange={this.onChange}
                         />
                         <FormFeedback>
-                          {fields["objectif"]["error"] !== null
-                            ? fields["objectif"]["error"]
+                          {fields["objectifs"]["error"] !== null
+                            ? fields["objectifs"]["error"]
                             : ""}
                         </FormFeedback>
                       </FormGroup>
@@ -201,48 +253,53 @@ class ProjectNewStatic extends React.PureComponent {
                     </Col>
                   </Row>
                   <Row>
-                    <Col>
+                    <Col md="4">
                       <FormGroup>
-                        <Label for="clientSelect">Client</Label>
-                        <Input
-                          name="client"
-                          type="select"
-                          id="clientSelect"
-                          value={fields["client"]["value"]}
-                          invalid={fields["client"]["error"] !== null}
-                          onChange={this.onChange}
-                        >
-                          <option value="0"></option>
-                          <option value="1">DRS</option>
-                          <option value="2">DOM</option>
-                          <option value="3">Total</option>
-                        </Input>
+                        <Label>Client</Label>
+                        <Select
+                          defaultValue={this.state.clientId}
+                          options={this.props.listOfClients}
+                          components={{ Group }}
+                          onChange={this.handleChange}
+                        />
                         <FormFeedback>
-                          {fields["client"]["error"] !== null
-                            ? fields["client"]["error"]
+                          {fields["clientId"]["error"] !== null
+                            ? fields["clientId"]["error"]
                             : ""}
                         </FormFeedback>
                       </FormGroup>
                     </Col>
-                    <Col>
+                    <Col md="4">
                       <FormGroup>
-                        <Label for="statutSelect">Statut</Label>
+                        <Label>Chef Projet</Label>
+                        <SuggestComponent />
+                        <FormFeedback>
+                          {fields["chefProjetCuid"]["error"] !== null
+                            ? fields["chefProjetCuid"]["error"]
+                            : ""}
+                        </FormFeedback>
+                      </FormGroup>
+                    </Col>
+                    <Col md="4">
+                      <FormGroup>
+                        <Label for="typeSelect">Type Projet</Label>
                         <Input
-                          name="statut"
+                          name="type"
                           type="select"
-                          id="statutSelect"
-                          value={fields["statut"]["value"]}
-                          invalid={fields["statut"]["error"] !== null}
+                          id="typeProjetSelect"
+                          value={fields["type"]["value"]}
+                          invalid={fields["type"]["error"] !== null}
                           onChange={this.onChange}
                         >
-                          <option></option>
-                          <option>Sur la bonne voie</option>
-                          <option>A Risque</option>
-                          <option>Sur la mauvaise voie</option>
+                          <option value="" disabled>
+                            Selectionnez le type du projet...
+                          </option>
+                          <option value="TTM">TTM</option>
+                          <option value="ITTM">ITTM</option>
                         </Input>
                         <FormFeedback>
-                          {fields["statut"]["error"] !== null
-                            ? fields["statut"]["error"]
+                          {fields["type"]["error"] !== null
+                            ? fields["type"]["error"]
                             : ""}
                         </FormFeedback>
                       </FormGroup>
@@ -277,7 +334,9 @@ class ProjectNewStatic extends React.PureComponent {
                       >
                         {this.props.status !== "pending" ? (
                           <i className="fa fa-plus mr-1"></i>
-                        ) : <i className="fa fa-spinner fa-spin"></i>}
+                        ) : (
+                          <i className="fa fa-spinner fa-spin"></i>
+                        )}
                         Créer
                       </Button>
                     </div>

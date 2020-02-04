@@ -14,9 +14,11 @@ import { Link } from "react-router-dom";
 
 class VueGlobaleStatic extends React.Component {  
 
-  componentDidMount(){
+  async componentDidMount(){
     const {idProject} = this.props.match.params;
     console.log("idProject", idProject);
+
+    await this.props.init({idProject}, this.props.token);
   }
 
   render() {
@@ -44,7 +46,7 @@ class VueGlobaleStatic extends React.Component {
                 </div>
                 <hr />
                 <div className="text-justify mt-2">
-                  <h4>Description de l'état</h4>
+                  <h4>Description du projet</h4>
                   <p className="project_statut_desc">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                     Vel quo non dolorem voluptatum repudiandae dolore at

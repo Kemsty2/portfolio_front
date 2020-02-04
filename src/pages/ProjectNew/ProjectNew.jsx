@@ -1,18 +1,22 @@
 import { connect } from "react-redux";
-import { addProject, updateProject } from "../../redux/actions";
+import { addProject, updateProject, addStatut } from "../../redux/actions";
 import ProjectNewStatic from "./ProjectNewStatic";
 import { MessagesActions } from "../../redux/actions/types";
 import { postProjectAPI } from "../../api/project";
+import { getStatutsAPI } from "../../api/statut";
+
 
 const mapStateToProps = state => {
   //  State Messages
   const sm = state.message,
-    su = state.profile;
+    su = state.profile, ss = state.statut;
 
   return {
     message: sm.message,
     status: sm.status,
-    user: su.user
+    listOfStatuts: ss.listOfStatuts,
+    listOfClients: [{label: 'Interne', options: []}, {label: 'Externe', options: []}],
+    token: su.keycloak.token
   };
 };
 
@@ -25,7 +29,11 @@ const mapDispatchToProps = dispatch => ({
       });
 
       console.log("payload", payload);
+      //  Création du projet
       const project = await postProjectAPI(payload, token);
+
+      //  Création du membre Chef Projet
+      //  await postMembersAPI(payload, token)
       dispatch(addProject(project));
 
       console.log("project", project);
@@ -35,6 +43,26 @@ const mapDispatchToProps = dispatch => ({
         message: "Projet Ajouté avec succès"
       });
     } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  },
+  getStatuts: async (token) => {
+    try{      
+      const result = await getStatutsAPI(token);
+      console.log("statut",result);
+      if(result && result.data){
+        result.data.map(statut => {
+          console.log("statut", statut)
+          dispatch(addStatut(statut));
+        })
+      }
+      return;
+    }catch(err){
       return dispatch({
         type: MessagesActions.FAILED_ADD,
         message:

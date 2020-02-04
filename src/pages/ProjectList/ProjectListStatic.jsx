@@ -13,9 +13,10 @@ import CrudTable from "../../components/CrudTable";
 
 const columns = [
   { nom: "objet", title: "Nom", linkTo:"/projects" },
-  { nom: "statut", title: "Statut" },
-  { nom: "createdAt", title: "Crée Le" },
-  { nom: "responsable", title: "Responsable" }
+  { nom: "type", title: "Type Projet" },
+  { nom: "createdAt", title: "Crée Le", date: true },
+  { nom: "updatedAt", title: "Dernière Mise à Jour", date: true},
+  { nom: "chefProjetCuid", title: "Chef Projet", getNameFromApi: true }
 ];
 
 class ProjectListStatic extends React.Component {
@@ -52,6 +53,10 @@ class ProjectListStatic extends React.Component {
                     <i className="fa fa-plus mr-1 d-inline"></i>
                     <span>Créer Projet</span>
                   </Link>
+                  {/* <Link to="/projects/new" className="btn btn-warning">
+                    <i className="fa fa-plus mr-1 d-inline"></i>
+                    <span>Ajouter Membre</span>
+                  </Link> */}
                   <Button onClick={e => this.toggle(e)}>
                     <i className="fa fa-filter mr-1 d-inline"></i> Filtrer
                   </Button>

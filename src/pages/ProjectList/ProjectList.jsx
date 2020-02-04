@@ -9,7 +9,7 @@ const mapStateToProps = state => {
   //  State Messages
   const sm = state.message,
     //  State Project
-    sp = state.project, su = state.profile;
+    sp = state.projectList, su = state.profile;
 
   return {
     message: sm.message,
