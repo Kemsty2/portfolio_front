@@ -109,8 +109,7 @@ class ProjectNewStatic extends React.Component {
     event.preventDefault();
     const { fields } = this.state;
 
-    /* if (isFormValid(fields, "projectNew") !== true) {
-      alert('invalid');
+    if (isFormValid(fields, "projectNew") !== true) {      
       const keys = Object.keys(fields);
       for (let name of keys) {        
         this.setState(prevState => {
@@ -128,7 +127,7 @@ class ProjectNewStatic extends React.Component {
         });
       }
       return;
-    } */
+    }
     let fieldObjet = lodash.mapValues(fields, "value");
     let payload = { ...fieldObjet };
     console.log(payload);

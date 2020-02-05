@@ -31,10 +31,8 @@ const people = [
 ];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
-async function getSuggestions(value) {
-  console.log(value);
-  const escapedValue = escapeRegexCharacters(value.trim());
-  console.log(escapedValue);
+async function getSuggestions(value) {  
+  const escapedValue = escapeRegexCharacters(value.trim());  
 
   if (escapedValue === "") {
     return [];
@@ -44,8 +42,7 @@ async function getSuggestions(value) {
 
   const result = await axios.get(
     `http://microsvc.orange.cm/api/InfoEmployee/v2?logins=${value}`
-  );
-  console.log(result);
+  );  
   return result.data.filter(user => regex.test(getSuggestionValue(user)));
 }
 
@@ -89,8 +86,7 @@ export default class SuggestComponent extends React.Component {
     };
   }
 
-  onChange = (event, { newValue, method }) => {
-    console.log("new value", newValue);
+  onChange = (event, { newValue, method }) => {    
     this.setState({
       value: newValue
     });
@@ -102,18 +98,20 @@ export default class SuggestComponent extends React.Component {
     let suggestions = await getSuggestions(value);
     const isInputBlank = value.trim() === '';
     const noSuggestions = !isInputBlank && suggestions.length === 0;
+    let suggestionSelected = '';
+    if(!noSuggestions){
+      suggestionSelected = getSuggestionValue(suggestions[0]);
+    }
     this.setState({
       suggestions: suggestions,
-      noSuggestions: noSuggestions,
-      suggestionSelected: ''
+      noSuggestions: noSuggestions,        
     });
   };
 
   // Autosuggest will call this function every time you need to clear suggestions.
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: [],
-      suggestionSelected: ''      
+      suggestions: [],            
     });
   };
 
@@ -121,18 +119,21 @@ export default class SuggestComponent extends React.Component {
     event,
     { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }
   ) => {
+    console.log(suggestionValue);
     this.setState({
-      suggestionSelected: suggestionValue
+      noSuggestions: false,
+      suggestionSelected: getSuggestionValue(suggestion)
     });
   };
 
   shouldRenderSuggestions = value => {
-    return value.trim().length > 2;
+    return value.trim().length > 1;
   };
 
   render() {
-    const { value, suggestions, noSuggestions } = this.state;
-
+    const { value, suggestions, noSuggestions, suggestionSelected } = this.state;
+    console.log("selected", suggestionSelected);
+    console.log("noSuggestion", noSuggestions);
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
       placeholder: "Entrer le CUID du Chef de Projet",
@@ -144,9 +145,9 @@ export default class SuggestComponent extends React.Component {
     const renderInputComponent = inputProps => (
       <FormGroup>
         <label>Nom du Projet</label>
-        <Input {...inputProps} invalid={noSuggestions} />
+        <Input {...inputProps} invalid={noSuggestions || suggestionSelected.trim().length <= 0} />
         <FormFeedback>
-          {noSuggestions ? "Utilisateur Introuvable": ""}
+          {noSuggestions || suggestionSelected.trim().length <= 0 ? "Utilisateur Introuvable": ""}
         </FormFeedback>
       </FormGroup>
     );

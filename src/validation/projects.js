@@ -21,11 +21,11 @@ const constraints = {
         message: "^Veuillez saisir le périmètre du projet"
       }
     },
-    objectif: {
+    objectifs: {
       presence: true,
       length: {        
         minimum: 1,
-        message: "^Veuillez saisir l'objectif du projet"
+        message: "^Veuillez saisir les objectifs du projet"
       }
     },
     statut: {
