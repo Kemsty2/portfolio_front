@@ -132,7 +132,7 @@ class ProjectNewStatic extends React.Component {
     let fieldObjet = lodash.mapValues(fields, "value");
     let payload = { ...fieldObjet };
     console.log(payload);
-    this.props.create(payload, this.props.user.token);
+    this.props.create(payload, this.props.token);
   };
 
   onChange = event => {
