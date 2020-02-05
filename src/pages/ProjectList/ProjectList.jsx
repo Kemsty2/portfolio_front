@@ -27,7 +27,7 @@ const mapDispatchToProps = dispatch => ({
       console.log("data", data);
       dispatch({
         type: MessagesActions.PENDING_ADD,
-        message: "Action en Cours"
+        message: ""
       });
 
       const result = await getProjectsAPI(data, token);
@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
       } else {
         dispatch(listerProjects(result.data));
       }
-      return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "La liste des projets a été chargé" });
+      return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "" });
     } catch (err) {
       return dispatch({
         type: MessagesActions.FAILED_ADD,

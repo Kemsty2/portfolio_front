@@ -11,6 +11,7 @@ import Work from "../pages/Work/Work";
 import MembersContainer from "../containers/Members/MembersContainer";
 import MembersList from "../pages/MemberList/MemberList";
 import Member from "../pages/Member/Member";
+import MemberNew from "../pages/MemberNew/MemberNew";
 
 export const routesSidebar = [
   { path: "/", icon: "test", name: "Accueil", layout: "" },
@@ -120,25 +121,18 @@ export const routes = [
         routes: [
           {
             path: "/projects/:idProject/members/",
-            name: "Lots de Travaux",
+            name: "Liste des Membres",
             component: MembersList,
             layout: "/projects",
             exact: true
-          },
+          }, 
           {
             path: "/projects/:idProject/members/:idmembers",
-            name: "Lots de Travaux",
+            name: "Details Membre",
             component: Member,
             layout: "/projects",
             exact: true
-          },    
-          {
-            path: "/projects/:idProject/members/new",
-            name: "Ajout Membre",
-            component: Member,
-            layout: "/projects",
-            exact: true
-          },    
+          }   
         ]
       }
     ]

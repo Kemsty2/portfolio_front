@@ -16,27 +16,13 @@ import {
 import { validateField, isFormValid } from "../../validation/validator";
 import lodash from "lodash";
 import DefaultLoading from "../../components/DefaultLoading";
-import Select, { components } from "react-select";
-import SuggestComponent from "../../components/Suggestions/SuggestComponent";
 
-const groupStyles = {
-  border: `2px dotted #2c2c2c`,
-  borderRadius: "5px",
-  background: "#f2fcff"
-};
-
-const Group = props => (
-  <div style={groupStyles}>
-    <components.Group {...props} />
-  </div>
-);
-
-class ProjectNewStatic extends React.Component {
+class MemberNewStatic extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedOption: { label: "", value: "" },
+      selectedOption: {label: '', value: ''},
       isLoading: false,
       fields: {
         objet: {
@@ -54,7 +40,7 @@ class ProjectNewStatic extends React.Component {
         objectifs: {
           value: "",
           error: null
-        },
+        },        
         clientId: {
           value: "00000000-0000-0000-0000-000000000000",
           label: "",
@@ -81,13 +67,13 @@ class ProjectNewStatic extends React.Component {
   }
 
   async componentDidMount() {
-    /* this.setState({
+    this.setState({
       isLoading: true
     });
-    await this.props.getStatuts(this.props.token);
+    //await this.props.getStatuts(this.props.token);
     this.setState({
       isLoading: false
-    }); */
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -102,7 +88,7 @@ class ProjectNewStatic extends React.Component {
     this.setState({
       selectedOption: selectedOption
     });
-    console.log(this.state.selectedOption);
+    console.log(this.state.selectedOption);    
   }
 
   onSubmit = event => {
@@ -155,6 +141,11 @@ class ProjectNewStatic extends React.Component {
   render() {
     const { fields, isLoading } = this.state;
 
+    /* const statutsOptions = this.props.listOfStatuts.map((statut, id) => {
+      return (
+      <option key={id} value={statut.id}>{statut.name}</option>
+      )
+    }) */
     return isLoading ? (
       <DefaultLoading />
     ) : (
@@ -163,7 +154,7 @@ class ProjectNewStatic extends React.Component {
           <Col md="12">
             <Card className="card-user">
               <CardHeader>
-                <CardTitle tag="h5">Nouveau Projet</CardTitle>
+                <CardTitle tag="h5">Nouveau Membre</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={this.onSubmit}>
@@ -246,52 +237,7 @@ class ProjectNewStatic extends React.Component {
                         </FormFeedback>
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md="4">
-                      <FormGroup>
-                        <Label>Client</Label>
-                        <Select
-                          defaultValue={this.state.clientId}
-                          options={this.props.listOfClients}
-                          components={{ Group }}
-                          onChange={this.handleChange}
-                        />
-                        <FormFeedback>
-                          {fields["clientId"]["error"] !== null
-                            ? fields["clientId"]["error"]
-                            : ""}
-                        </FormFeedback>
-                      </FormGroup>
-                    </Col>
-                    <Col md="4">
-                      <SuggestComponent />
-                    </Col>
-                    <Col md="4">
-                      <FormGroup>
-                        <Label for="typeSelect">Type Projet</Label>
-                        <Input
-                          name="type"
-                          type="select"
-                          id="typeProjetSelect"
-                          value={fields["type"]["value"]}
-                          invalid={fields["type"]["error"] !== null}
-                          onChange={this.onChange}
-                        >
-                          <option value="" disabled>
-                            Selectionnez le type du projet...
-                          </option>
-                          <option value="TTM">TTM</option>
-                          <option value="ITTM">ITTM</option>
-                        </Input>
-                        <FormFeedback>
-                          {fields["type"]["error"] !== null
-                            ? fields["type"]["error"]
-                            : ""}
-                        </FormFeedback>
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                  </Row>                  
                   <Row>
                     <Col md="12">
                       <FormGroup>
@@ -338,4 +284,4 @@ class ProjectNewStatic extends React.Component {
   }
 }
 
-export default ProjectNewStatic;
+export default MemberNewStatic;

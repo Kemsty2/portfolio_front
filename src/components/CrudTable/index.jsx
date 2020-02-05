@@ -34,8 +34,8 @@ class CrudTable extends Component {
     };
   }
 
-  async componentDidMount() {    
-    await this.getRows(0, "current");   
+  async componentDidMount() {
+    await this.getRows(0, "current");
   }
 
   deleteRow(e, row) {
@@ -71,13 +71,16 @@ class CrudTable extends Component {
     let page = idx;
     if (typee === "next") page = page + 1;
     if (typee === "previous") page = page - 1;
-    await this.props.onEvent({
-      max_rows,
-      search,
-      skip_rows: page,
-      openDate,
-      closeDate
-    }, this.props.token);
+    await this.props.onEvent(
+      {
+        max_rows,
+        search,
+        skip_rows: page,
+        openDate,
+        closeDate
+      },
+      this.props.token
+    );
     if (page >= 0) this.setState({ currentPage: page });
   }
 
@@ -237,6 +240,8 @@ class CrudTable extends Component {
                           </Link>
                         ) : row[item.nom] && row[item.nom].length > 50 ? (
                           row[item.nom].substring(0, 50) + "..."
+                        ) : item.date ? (
+                          new Date(row[item.nom]).toLocaleString()
                         ) : (
                           row[item.nom]
                         )}
@@ -394,13 +399,12 @@ class CrudTable extends Component {
   }
 }
 
-const mapStateToProps = state => {  
+const mapStateToProps = state => {
   return {
     token: state.profile.keycloak.token
-  }
+  };
 };
 
-const mapActionsToProps = {  
-};
+const mapActionsToProps = {};
 
 export default connect(mapStateToProps, mapActionsToProps)(CrudTable);

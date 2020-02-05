@@ -25,7 +25,7 @@ const mapDispatchToProps = dispatch => ({
     try {
       dispatch({
         type: MessagesActions.PENDING_ADD,
-        message: "Action en cours"
+        message: ""
       });
 
       console.log("payload", payload);

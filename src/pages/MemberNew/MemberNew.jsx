@@ -1,9 +1,21 @@
-import React from "react";
-class MemberNew extends React.Component {  
-  
-  render() {
-    return <div className="content"></div>;
-  }
-}
+import { connect } from "react-redux";
+import MemberNewStatic from "./MemberNewStatic";
 
-export default MemberNew;
+
+
+const mapStateToProps = state => {
+  //  State Messages
+  const sm = state.message,
+    su = state.profile, ss = state.statut;
+
+  return {
+    message: sm.message,
+    status: sm.status,    
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MemberNewStatic);
