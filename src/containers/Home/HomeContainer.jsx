@@ -56,11 +56,11 @@ class HomeContainer extends React.Component {
           let roles = keycloak.resourceAccess.portfolio_dev.roles;
           roles = isArray(roles) ? roles : isString(roles) ? [roles] : [];
 
-          if (isEmpty(roles) || !roles.includes(standard)) {
+          /* if (isEmpty(roles) || !roles.includes(standard)) {
             keycloak.logout();
             history.push("/");
             return;
-          }
+          } */
 
           setAdminSecurity(keycloak, roles);
           keycloak
