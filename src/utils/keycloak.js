@@ -10,6 +10,4 @@ const config = {
     "confidential-port": 0
   };
 
-
-
 export default config;

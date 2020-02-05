@@ -103,7 +103,7 @@ class HomeContainer extends React.Component {
     const { profile } = this.props;
     return (
       <div className="wrapper">
-        {profile.authenticated ? (
+        {/* {profile.authenticated ? (
           <>
             <Sidebar
               {...this.props}
@@ -123,8 +123,8 @@ class HomeContainer extends React.Component {
           </>
         ) : (
           <DefaultLoading />
-        )}
-        {/* <Sidebar
+        )} */}
+        <Sidebar
           {...this.props}
           routes={routesSidebar}
           bgColor={this.state.backgroundColor}
@@ -138,7 +138,7 @@ class HomeContainer extends React.Component {
             ))}
           </Switch>
           <Footer fluid />
-        </div> */}
+        </div>
       </div>
     );
   }
