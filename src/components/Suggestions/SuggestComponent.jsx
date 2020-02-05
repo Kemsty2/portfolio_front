@@ -124,6 +124,7 @@ export default class SuggestComponent extends React.Component {
       noSuggestions: false,
       suggestionSelected: getSuggestionValue(suggestion)
     });
+    this.props.onChangeChefProjet({suggestedSelected: getSuggestionValue(suggestion), error: this.state.noSuggestions})
   };
 
   shouldRenderSuggestions = value => {

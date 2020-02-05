@@ -53,14 +53,15 @@ class HomeContainer extends React.Component {
       .init({ onLoad: "login-required", promiseType: "native" })
       .then(authenticated => {
         if (authenticated) {
-          let roles = keycloak.resourceAccess.portfolio_dev.roles;
-          roles = isArray(roles) ? roles : isString(roles) ? [roles] : [];
+          let roles = [];
+          //let roles = keycloak.resourceAccess.portfolio_dev.roles;
+          /* roles = isArray(roles) ? roles : isString(roles) ? [roles] : [];
 
           if (isEmpty(roles) || !roles.includes(standard)) {
             keycloak.logout();
             history.push("/");
             return;
-          }
+          } */
 
           setAdminSecurity(keycloak, roles);
           keycloak

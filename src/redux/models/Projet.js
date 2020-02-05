@@ -3,7 +3,7 @@ class User {
     Id,
     Objet,
     StatutId,
-    ChefProjetId,
+    ChefProjetCuid,
     Type,
     Perimetre,
     Objectifs,
@@ -25,7 +25,7 @@ class User {
     this.Id = Id;
     this.Objet = Objet;
     this.StatutId = StatutId;
-    this.ChefProjetId = ChefProjetId;
+    this.ChefProjetCuid = ChefProjetCuid;
     this.Type = Type;
     this.Perimetre = Perimetre;
     this.Objectifs = Objectifs;

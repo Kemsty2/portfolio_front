@@ -38,6 +38,10 @@ class ProjectNewStatic extends React.Component {
     this.state = {
       selectedOption: { label: "", value: "" },
       isLoading: false,
+      chefProjet: {
+        value: "",
+        error: true
+      },
       fields: {
         objet: {
           value: "",
@@ -98,6 +102,16 @@ class ProjectNewStatic extends React.Component {
     }
   }
 
+  onChangeChefProjet = (value) => {
+    console.log("chefProjet", value)
+    this.setState({
+      chefProjet: {
+        value: value.suggestedSelected,
+        error: value.error
+      }      
+    })
+  }
+
   handleChange(selectedOption) {
     this.setState({
       selectedOption: selectedOption
@@ -107,9 +121,9 @@ class ProjectNewStatic extends React.Component {
 
   onSubmit = event => {
     event.preventDefault();
-    const { fields } = this.state;
+    const { fields, chefProjet } = this.state;
 
-    if (isFormValid(fields, "projectNew") !== true) {      
+    if (isFormValid(fields, "projectNew") !== true || this.state.chefProjet.error) {      
       const keys = Object.keys(fields);
       for (let name of keys) {        
         this.setState(prevState => {
@@ -129,7 +143,7 @@ class ProjectNewStatic extends React.Component {
       return;
     }
     let fieldObjet = lodash.mapValues(fields, "value");
-    let payload = { ...fieldObjet };
+    let payload = { ...fieldObjet, chefProjetCuid: chefProjet.value };
     console.log(payload);
     this.props.create(payload, this.props.token);
   };
@@ -264,7 +278,7 @@ class ProjectNewStatic extends React.Component {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <SuggestComponent />
+                      <SuggestComponent onChangeChefProjet={this.onChangeChefProjet} />
                     </Col>
                     <Col md="4">
                       <FormGroup>

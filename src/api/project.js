@@ -14,17 +14,17 @@ export function getProjectsAPI(data, token) {
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }
   };
-  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}&StartDate=01/02/2020&EndDate=03/02/2020`, options);
+  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
 }
 
 export function getProjectAPI(projectId, token) {
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }    
   };
   return getRequest(`${url}/${projectId}`, options);
@@ -36,7 +36,7 @@ export function postProjectAPI(payload, token) {
     method: 'post',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -50,7 +50,7 @@ export function putProjectAPI(projectId, payload, token) {
     method: 'put',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -63,7 +63,7 @@ export function patchProjectAPI(projectId, payload,token) {
     url: `${url}/${projectId}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -76,7 +76,7 @@ export function deleteProjectAPI(projectId, token) {
     method: 'delete',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }
   };
   return deleteRequest(options);

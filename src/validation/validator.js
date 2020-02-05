@@ -57,11 +57,13 @@ export function isFormValid(formData, constraintGroup) {
     throw new Error("FormData must be an object !");
   }
 
+  console.log(formData);
+
   let valid = true;
   const keys = Object.keys(formData);
 
   for (let key of keys) {
-    const error = validateField(key, formData[key], [], constraintGroup);
+    const error = validateField(key, formData[key].value, [], constraintGroup);
     if (error !== null) {
       valid = [key, error];
       break;
