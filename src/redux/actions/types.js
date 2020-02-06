@@ -28,3 +28,12 @@ export const StatutsActions = {
 export const ProjectActions = {
   SET_PROJECT_DETAILS:"@project/set_project_details"
 }
+
+export const MembersActions = {
+  ADD_MEMBER: "@members/add_member",  
+  UPDATE_MEMBER: "@members/update_member",  
+  REMOVE_ALL_MEMBERS: "@members/remove_all",
+  DEFINE_NUM_MEMBERS: "@members/define_num_members",
+  LISTER_MEMBERS: "@projects/lister_members",  
+};
+

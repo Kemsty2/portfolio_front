@@ -16,7 +16,7 @@ import MemberNew from "../pages/MemberNew/MemberNew";
 export const routesSidebar = [
   { path: "/", icon: "test", name: "Accueil", layout: "" },
   { path: "/projects/", icon: "test", name: "liste Projets", layout: "" },
-  {
+  /* {
     path: "/1/",
     icon: "test",
     name: "Vue Globale",
@@ -39,7 +39,7 @@ export const routesSidebar = [
     icon: "test",
     name: "Membres",
     layout: "/projects"
-  }
+  } */
 ];
 
 export const routes = [

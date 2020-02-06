@@ -17,7 +17,7 @@ export function getMembersAPI(data, token) {
       Authorization: `Basic ${auth}`
     }
   };
-  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}&StartDate=01/02/2020&EndDate=03/02/2020`, options);
+  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
 }
 
 export function getMemberAPI(memberId, token) {

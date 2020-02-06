@@ -106,7 +106,7 @@ class ProjectNewStatic extends React.Component {
     console.log("chefProjet", value)
     this.setState({
       chefProjet: {
-        value: value.suggestedSelected,
+        value: value.suggestedSelected.LogonName,
         error: value.error
       }      
     })
@@ -123,12 +123,13 @@ class ProjectNewStatic extends React.Component {
     event.preventDefault();
     const { fields, chefProjet } = this.state;
 
-    if (isFormValid(fields, "projectNew") !== true || this.state.chefProjet.error) {      
+    if (isFormValid(fields, "projectNew") !== true || chefProjet.error) {      
       const keys = Object.keys(fields);
       for (let name of keys) {        
         this.setState(prevState => {
           let value = prevState.fields[name].value;
           return {
+            ...prevState,
             fields: {
               ...prevState.fields,
               [name]: {
@@ -153,6 +154,7 @@ class ProjectNewStatic extends React.Component {
 
     this.setState(prevState => {
       return {
+        ...prevState,
         fields: {
           ...prevState.fields,
           [name]: {
@@ -278,7 +280,7 @@ class ProjectNewStatic extends React.Component {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <SuggestComponent onChangeChefProjet={this.onChangeChefProjet} />
+                      <SuggestComponent onChangeChefProjet={this.onChangeChefProjet} value="" label="Chef Projet" />
                     </Col>
                     <Col md="4">
                       <FormGroup>

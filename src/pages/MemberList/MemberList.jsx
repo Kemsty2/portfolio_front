@@ -1,112 +1,144 @@
-import React from "react";
+import MemberListStatic from "./MemberListStatic";
+import { MessagesActions } from "../../redux/actions/types";
+import { connect } from "react-redux";
+import { getMembersAPI, postMemberAPI, putMemberAPI, deleteMemberAPI } from "../../api/member";
 import {
-  Row,
-  Col,
-  Card,
-  CardHeader,
-  CardTitle,
-  CardBody,
-  Table,
-  Modal,
-  ModalBody,
-  ModalHeader,
-  ModalFooter,
-  Button
-} from "reactstrap";
-import MemberTr from "./MemberTr";
-import { Link } from "react-router-dom";
+  defineNumMembers,
+  listerMembers,
+  addMember,
+  updateMember
+} from "../../redux/actions";
 
-class MembersList extends React.Component {
-  constructor(props) {
-    super(props);
+const mapStateToProps = state => {
+  const sm = state.message,
+    smb = state.memberList,
+    su = state.profile;
 
-    this.state = {
-      modal: false
-    };
-  }
-
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
+  return {
+    message: sm.message,
+    status: sm.status,
+    rows: smb.listOfMembers,
+    totalItems: smb.numMembers,
+    /* members: smb.listOfMembers, */
+    token: su.keycloak.token
   };
+};
 
-  render() {
-    const { modal } = this.state;
-    return (
-      <div className="content">
-        <Row>
-          <Col md="12">
-            <Card>
-              <CardHeader className="d-flex justify-content-between bg-black">
-                <CardTitle tag="h4">Membres</CardTitle>
-                <button
-                  className="btn btn-primary d-flex justify-content-between"
-                  onClick={this.toggle}
-                >
-                  <i className="nc-icon nc-simple-add"></i>
-                  <span>Créer Membre</span>
-                </button>
-              </CardHeader>
-              <CardBody>
-                <Table hover bordered>
-                  <thead className="text-primary text-capitilize">
-                    <tr>
-                      <th>Cuid</th>
-                      <th>Nom</th>
-                      <th>Type</th>
-                      <th>Créer Le</th>
-                      <th>Créer Par</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <MemberTr />
-                    <MemberTr />
-                    <MemberTr />
-                    <MemberTr />
-                    <MemberTr />
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-        <Modal
-          isOpen={modal}
-          toggle={this.toggle}
-          className="modal-dialog modal-dialog-centered modal-lg"
-        >
-          <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
-          <ModalBody>
-            <form>
-              <div className="form-group">
-                <label for="recipient-name" className="col-form-label">
-                  Recipient:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="recipient-name"
-                />
-              </div>
-              <div className="form-group">
-                <label for="message-text" className="col-form-label">
-                  Message:
-                </label>
-                <textarea className="form-control" id="message-text"></textarea>
-              </div>
-            </form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary">Do Something</Button>{" "}
-            <Button color="danger" onClick={this.toggle}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    );
+const mapDispatchToProps = dispatch => ({
+  onEvent: async (data, token) => {
+    try {
+      console.log("data", data);
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: ""
+      });
+
+      const result = await getMembersAPI(data, token);
+      dispatch(defineNumMembers(result.total));
+
+      console.log("listOfMembers", result);
+      if (data.skip_rows < -1) {
+      } else {
+        dispatch(listerMembers(result.data));
+      }
+      return dispatch({ type: MessagesActions.SUCCESS_ADD, message: "" });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  },
+  create: async (payload, token) => {
+    try {
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: ""
+      });
+
+      console.log("payload", payload);
+      //  Création du projet
+      const member = await postMemberAPI(payload, token);
+
+      //  Création du membre Chef Projet
+      //  await postMembersAPI(payload, token)
+      dispatch(addMember(member));
+
+      console.log("member", member);
+
+      return dispatch({
+        type: MessagesActions.SUCCESS_ADD,
+        message: "Membre Ajouté avec succès"
+      });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  },
+  update: async (payload, token) => {
+    try {
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: ""
+      });
+
+      console.log("payload", payload);
+      //  Création du projet
+      const member = await putMemberAPI(payload.id, payload, token);
+
+      //  Création du membre Chef Projet
+      //  await postMembersAPI(payload, token)
+      dispatch(updateMember(member));
+
+      console.log("member", member);
+
+      return dispatch({
+        type: MessagesActions.SUCCESS_ADD,
+        message: "Membre Modifié avec succès"
+      });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  },
+  delete: async (payload, token) => {    
+    try {
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: ""
+      });
+
+      console.log("payload", payload);
+      //  Création du projet
+      await deleteMemberAPI(payload, token);
+
+      //  Création du membre Chef Projet
+      //  await postMembersAPI(payload, token)
+      //dispatch(addProject(project));      
+
+      return dispatch({
+        type: MessagesActions.SUCCESS_ADD,
+        message: "Membre Supprimé avec succès"
+      });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
   }
-}
+});
 
-export default MembersList;
+export default connect(mapStateToProps, mapDispatchToProps)(MemberListStatic);

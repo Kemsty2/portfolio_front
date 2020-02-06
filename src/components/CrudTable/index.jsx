@@ -49,9 +49,10 @@ class CrudTable extends Component {
       button: {
         text: "Oui"
       }
-    }).then(willDelete => {
+    }).then(async willDelete => {
       if (willDelete) {
-        this.props.delete(row.id);
+        await this.props.delete(row.id, this.props.token);
+        await this.getRows(0, "current")
       }
     });
   }
@@ -113,9 +114,9 @@ class CrudTable extends Component {
 
   showModal(e, item = { id: "new" + Date.now() }) {
     e.preventDefault();
-
+    console.log("item edit", item)
     this.setState({ item }, () => {
-      this.props.toggleModal(item.id);
+      this.props.toggleModal(e, item);
     });
   }
 
@@ -145,7 +146,7 @@ class CrudTable extends Component {
         {this.props.actions.indexOf("search") !== -1 && (
           <Collapse isOpen={filterOpen}>
             <Row className="pt-3">
-              <Col md={3}>
+              <Col md={4}>
                 <FormGroup>
                   <Label>Rechercher</Label>
                   <Input
@@ -156,25 +157,8 @@ class CrudTable extends Component {
                     type="text"
                   />
                 </FormGroup>
-              </Col>
-              <Col md={3}>
-                <FormGroup>
-                  <Label for="statut">Statut</Label>
-                  <Input
-                    type="select"
-                    name="statut"
-                    id="statut"
-                    value={statut}
-                    onChange={e => this.onChange(e)}
-                  >
-                    <option value="1">Sur La Bonne Voie</option>
-                    <option value="2">Sur La Mauvaise Voie</option>
-                    <option value="3">A Risque</option>
-                    <option value="0">Non Défini</option>
-                  </Input>
-                </FormGroup>
-              </Col>
-              <Col md={3}>
+              </Col>              
+              <Col md={4}>
                 <FormGroup>
                   <Label>Début</Label>
                   <Input
@@ -185,7 +169,7 @@ class CrudTable extends Component {
                   />
                 </FormGroup>
               </Col>
-              <Col md={3}>
+              <Col md={4}>
                 <FormGroup>
                   <Label>Fin</Label>
                   <Input
@@ -198,7 +182,7 @@ class CrudTable extends Component {
               </Col>
             </Row>
             <Row className="justify-content-center">
-              <Col md={3}>
+              <Col md={4}>
                 <Button block onClick={this.actualiser} color="primary">
                   {" "}
                   <i className="fa fa-sync-alt mr-2 d-inline"></i>
@@ -252,6 +236,7 @@ class CrudTable extends Component {
                         <Button
                           title="Modifier l'élément"
                           className="btn-primary"
+                          onClick={(e) => {this.showModal(e, row)}}
                         >
                           {" "}
                           <i className="fa fa-pencil-alt"></i>{" "}
@@ -399,12 +384,4 @@ class CrudTable extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    token: state.profile.keycloak.token
-  };
-};
-
-const mapActionsToProps = {};
-
-export default connect(mapStateToProps, mapActionsToProps)(CrudTable);
+export default CrudTable;

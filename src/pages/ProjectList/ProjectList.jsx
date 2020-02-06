@@ -16,7 +16,7 @@ const mapStateToProps = state => {
     status: sm.status,
     rows: sp.listOfProjects,
     totalItems: sp.numProjects,
-    user: su.user
+    token: su.keycloak.token
   };
 };
 

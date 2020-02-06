@@ -6,6 +6,7 @@ import { projectsReducer } from "../reducers/projects";
 import { messagesReducer } from "../reducers/messages";
 import { statutsReducer } from "../reducers/statuts";
 import { projectReducer } from "../reducers/project";
+import { membersReducer } from "../reducers/members";
 
 export default function configureStore(history, initialState) {
   const middleware = [thunk, routerMiddleware(history)];
@@ -22,6 +23,7 @@ export default function configureStore(history, initialState) {
 
   const defaultReducer = combineReducers({
     projectList: projectsReducer,
+    memberList: membersReducer,
     project: projectReducer,
     profile: layoutReducer,
     message: messagesReducer,

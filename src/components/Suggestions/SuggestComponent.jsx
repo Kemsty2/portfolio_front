@@ -3,6 +3,8 @@ import Autosuggest from "react-autosuggest";
 import { FormGroup, Input, FormFeedback } from "reactstrap";
 import "./style.css";
 import axios from "axios";
+import uuid from "uuid";
+
 function escapeRegexCharacters(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -82,11 +84,26 @@ export default class SuggestComponent extends React.Component {
       value: "",
       suggestions: [],
       noSuggestions: false,
-      suggestionSelected: ''
+      suggestionSelected: '',
+      id: uuid.v4()
     };
   }
 
-  onChange = (event, { newValue, method }) => {    
+  /* componentDidUpdate(prevProps){
+    if(this.props.value !== prevProps.value){
+      this.setState({
+        value: this.props.value
+      })
+    }
+  } */
+
+  componentDidMount(){
+    this.setState({
+      value: this.props.value
+    });
+  }
+
+  onChangeSuggestComponent = (event, { newValue, method }) => {    
     this.setState({
       value: newValue
     });
@@ -124,7 +141,7 @@ export default class SuggestComponent extends React.Component {
       noSuggestions: false,
       suggestionSelected: getSuggestionValue(suggestion)
     });
-    this.props.onChangeChefProjet({suggestedSelected: getSuggestionValue(suggestion), error: this.state.noSuggestions})
+    this.props.onChangeChefProjet({suggestedSelected: suggestion, error: this.state.noSuggestions})
   };
 
   shouldRenderSuggestions = value => {
@@ -132,26 +149,29 @@ export default class SuggestComponent extends React.Component {
   };
 
   render() {
-    const { value, suggestions, noSuggestions, suggestionSelected } = this.state;
-    console.log("selected", suggestionSelected);
-    console.log("noSuggestion", noSuggestions);
+    let { value, suggestions, noSuggestions, suggestionSelected } = this.state;
+    if(this.props.value){      
+      noSuggestions = false;
+      suggestionSelected = value
+    }
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
+      name: 'chefProjetCuid',
       placeholder: "Entrer le CUID du Chef de Projet",
-      value,
-      onChange: this.onChange,
+      value,      
+      onChange: this.onChangeSuggestComponent,
       type: "text"
     };
 
     const renderInputComponent = inputProps => (
       <FormGroup>
-        <label>Nom du Projet</label>
+        <label>{this.props.label}</label>
         <Input {...inputProps} invalid={noSuggestions || suggestionSelected.trim().length <= 0} />
         <FormFeedback>
           {noSuggestions || suggestionSelected.trim().length <= 0 ? "Utilisateur Introuvable": ""}
         </FormFeedback>
       </FormGroup>
-    );
+    );    
 
     // Finally, render it!
     return (
@@ -164,7 +184,9 @@ export default class SuggestComponent extends React.Component {
         shouldRenderSuggestions={this.shouldRenderSuggestions}
         inputProps={inputProps}
         renderInputComponent={renderInputComponent}
+        focusInputOnSuggestionClick={false}
         onSuggestionSelected={this.onSuggestionSelected}
+        id={this.state.id}
       />
     );
   }
