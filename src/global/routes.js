@@ -12,6 +12,7 @@ import MembersContainer from "../containers/Members/MembersContainer";
 import MembersList from "../pages/MemberList/MemberList";
 import Member from "../pages/Member/Member";
 import MemberNew from "../pages/MemberNew/MemberNew";
+import NotFound from "../pages/NotFound/NotFound";
 
 export const routesSidebar = [
   { path: "/", icon: "test", name: "Accueil", layout: "" },
@@ -53,8 +54,7 @@ export const routes = [
     path: "/projects",
     name: "Liste Projets",
     layout: "",
-    component: ProjectsContainer,
-    exact: false,
+    component: ProjectsContainer,        
     routes: [
       {
         path: "/projects/",

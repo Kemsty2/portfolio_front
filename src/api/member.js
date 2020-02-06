@@ -8,23 +8,32 @@ import {
 import { BACKEND_API } from "../global/environment";
 
 const url = `${BACKEND_API}membre`;
-const auth = btoa('WDTN4590:Naruto1997');
 
 export function getMembersAPI(data, token) {
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }
   };
-  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
+  return getRequest(`${BACKEND_API}/membres?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
+}
+
+export function getMembersOfProjectAPI(projetId, data, token) {
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  };
+  return getRequest(`${BACKEND_API}projet/${projetId}/membres?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
 }
 
 export function getMemberAPI(memberId, token) {
   const options = {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }    
   };
   return getRequest(`${url}/${memberId}`, options);
@@ -36,7 +45,7 @@ export function postMemberAPI(payload, token) {
     method: 'post',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -50,7 +59,7 @@ export function putMemberAPI(memberId, payload, token) {
     method: 'put',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -63,7 +72,7 @@ export function patchMemberAPI(memberId, payload,token) {
     url: `${url}/${memberId}`,
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     },
     data: {...payload}
   };
@@ -76,7 +85,7 @@ export function deleteMemberAPI(memberId, token) {
     method: 'delete',
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Basic ${auth}`
+      Authorization: `Bearer ${token}`
     }
   };
   return deleteRequest(options);

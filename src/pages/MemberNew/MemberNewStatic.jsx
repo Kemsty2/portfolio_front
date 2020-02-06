@@ -88,7 +88,7 @@ class MemberNewStatic extends React.Component {
     this.setState({
       selectedOption: selectedOption
     });
-    console.log(this.state.selectedOption);    
+        
   }
 
   onSubmit = event => {
@@ -117,7 +117,7 @@ class MemberNewStatic extends React.Component {
     } */
     let fieldObjet = lodash.mapValues(fields, "value");
     let payload = { ...fieldObjet };
-    console.log(payload);
+    
     this.props.create(payload, this.props.token);
   };
 

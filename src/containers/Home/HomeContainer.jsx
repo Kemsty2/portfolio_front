@@ -1,9 +1,9 @@
 import * as React from "react";
 import PerfectScrollbar from "perfect-scrollbar";
-import { Switch } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { isEmpty, isArray, isString } from "lodash";
-
+import {isArray, isString } from "lodash";
+import {isEmpty} from '../../utils/utilsFunction';
 import { routes, routesSidebar } from "../../global/routes";
 import { RouteWithSubRoutes } from "../../utils/utilsComponents";
 import Keycloak from "keycloak-js";
@@ -42,6 +42,8 @@ class HomeContainer extends React.Component {
   };
 
   componentDidMount() {
+    const {key} = this.props.location;
+    
     const { setAdminSecurity, setAdminProfile, history, profile } = this.props;    
     if (navigator.platform.indexOf("Win") > -1) {
       //ps = new PerfectScrollbar(this.mainPanel.current);        
@@ -76,10 +78,15 @@ class HomeContainer extends React.Component {
               });
             })
             .catch(error => {});
+        }else{
+          keycloak.logout();
         }
       })
       .catch(error => {
-        console.log(error);
+        
+        if(!isEmpty(profile)){
+          profile.keycloak.logout();
+        }        
       });
   }
 
@@ -101,8 +108,13 @@ class HomeContainer extends React.Component {
   handleBgClick = color => {
     this.setState({ backgroundColor: color });
   };
+
   render() {
-    const { profile } = this.props;
+    const { profile } = this.props;    
+    /* if(typeof key === "undefined"){
+      return <Redirect to="/404" />
+    } */
+
     return (
       <div className="wrapper">
         {profile.authenticated ? (

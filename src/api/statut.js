@@ -7,14 +7,13 @@ import {
   } from "../utils/utilsHttp";
   import { BACKEND_API } from "../global/environment";
   
-  const url = `${BACKEND_API}status`;
-  const auth = btoa('WDTN4590:Naruto1997');
+  const url = `${BACKEND_API}status`;  
   
   export function getStatutsAPI(token) {
     const options = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       }
     };
     return getRequest(`${url}?Skip=${0}&Max=${10000}&search=${""}&StartDate=01/02/2020&EndDate=03/02/2020`, options);
@@ -24,7 +23,7 @@ import {
     const options = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       }    
     };
     return getRequest(`${url}/${statutId}`, options);
@@ -36,7 +35,7 @@ import {
       method: 'post',
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       },
       data: {...payload}
     };
@@ -50,7 +49,7 @@ import {
       method: 'put',
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       },
       data: {...payload}
     };
@@ -63,7 +62,7 @@ import {
       url: `${url}/${statutId}`,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       },
       data: {...payload}
     };
@@ -76,7 +75,7 @@ import {
       method: 'delete',
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${auth}`
+        Authorization: `Bearer ${token}`
       }
     };
     return deleteRequest(options);

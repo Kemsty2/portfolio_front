@@ -29,10 +29,9 @@ export function membersReducer(state = initialState, action) {
       }
 
     case MembersActions.UPDATE_MEMBER:
-        console.log("listOfMember",listOfMembers);        
+          
       listOfMembers = state.listOfMembers.map(member => {
-        console.log("member", member);
-        console.log("action_member", action.member)
+        
         if (member.id === action.member.id) {        
           return Object.assign({}, member, action.member);
         }

@@ -20,14 +20,14 @@ const HomePage = Loadable({
 });
 
 const App = () => (
-  <HashRouter>
+  <BrowserRouter>
     <Provider store={store}>
-      <Switch>
-        <Route path="/" component={HomePage} />        
-        <Route component={NotFound} />
+      <Switch>        
+        <Route path="/404" component={NotFound} />
+        <Route path="/" component={HomePage} />                                
       </Switch>
     </Provider>
-  </HashRouter>
+  </BrowserRouter>
 );
 
 export default App;

@@ -66,6 +66,10 @@ code {
 }
 
 .wrapper {
-  min-height: 100vh !important;
+  min-height: 90vh !important;
   height: auto;
+}
+
+.main_panel .content {
+  min-height: calc(95vh - 123px);
 }

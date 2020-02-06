@@ -8,7 +8,6 @@ import {
 import { BACKEND_API } from "../global/environment";
 
 const url = `${BACKEND_API}projet`;
-const auth = btoa('WDTN4590:Naruto1997');
 
 export function getProjectsAPI(data, token) {
   const options = {
@@ -17,7 +16,7 @@ export function getProjectsAPI(data, token) {
       Authorization: `Bearer ${token}`
     }
   };
-  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&search=${data.search}`, options);
+  return getRequest(`${url}?Skip=${data.skip_rows}&Max=${data.max_rows}&Search=${data.search}`, options);
 }
 
 export function getProjectAPI(projectId, token) {

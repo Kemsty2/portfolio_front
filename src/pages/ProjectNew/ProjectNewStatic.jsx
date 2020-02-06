@@ -18,6 +18,7 @@ import lodash from "lodash";
 import DefaultLoading from "../../components/DefaultLoading";
 import Select, { components } from "react-select";
 import SuggestComponent from "../../components/Suggestions/SuggestComponent";
+import { isEmpty } from "../../utils/utilsFunction";
 
 const groupStyles = {
   border: `2px dotted #2c2c2c`,
@@ -39,18 +40,15 @@ class ProjectNewStatic extends React.Component {
       selectedOption: { label: "", value: "" },
       isLoading: false,
       chefProjet: {
-        value: "",
+        cuid: "",
+        nom: "",
         error: true
       },
       fields: {
         objet: {
           value: "",
           error: null
-        },
-        description: {
-          value: "",
-          error: null
-        },
+        },        
         perimetre: {
           value: "",
           error: null
@@ -85,47 +83,77 @@ class ProjectNewStatic extends React.Component {
   }
 
   async componentDidMount() {
-    /* this.setState({
-      isLoading: true
-    });
-    await this.props.getStatuts(this.props.token);
-    this.setState({
-      isLoading: false
-    }); */
+    const params = new URLSearchParams(this.props.location.search);
+    const idProject = params.get("idProject");
+
+    if (idProject) {
+      this.setState({
+        isLoading: true
+      });
+      await this.props.getProject(idProject, this.props.token);
+      this.setState({
+        isLoading: false
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.status !== prevProps.status) {
+    if (this.props.status !== prevProps.status && isEmpty(this.props.project)) {
       if (this.props.status === "success") {
         this.props.history.push("/projects");
       }
     }
+    const { project } = this.props;
+    if (project !== prevProps.project) {
+      if (!isEmpty(project)) {
+        let fields = this.state.fields;
+        let chefProjet = {
+          cuid: "",
+          nom: "",
+          error: null
+        };
+
+        chefProjet.cuid = project.chefProjetCuid;
+        chefProjet.nom = project.chefProjetName;
+        lodash.keys(fields).forEach(key => {
+          fields = Object.assign({}, fields, {
+            [key]: { value: project[key], error: null }
+          });
+        });
+
+        this.setState({
+          fields,
+          chefProjet
+        });
+      }
+    }
   }
 
-  onChangeChefProjet = (value) => {
-    console.log("chefProjet", value)
+  onChangeChefProjet = value => {
+    
     this.setState({
       chefProjet: {
-        value: value.suggestedSelected.LogonName,
+        cuid: value.suggestedSelected.LogonName,
+        nom: value.suggestedSelected.Name,
         error: value.error
-      }      
-    })
-  }
+      }
+    });
+  };
 
   handleChange(selectedOption) {
     this.setState({
       selectedOption: selectedOption
     });
-    console.log(this.state.selectedOption);
+    
   }
 
-  onSubmit = event => {
+  onSubmit = async event => {
     event.preventDefault();
     const { fields, chefProjet } = this.state;
 
-    if (isFormValid(fields, "projectNew") !== true || chefProjet.error) {      
+    if (isFormValid(fields, "projectNew") !== true || chefProjet.error) {
       const keys = Object.keys(fields);
-      for (let name of keys) {        
+      for (let name of keys) {
         this.setState(prevState => {
           let value = prevState.fields[name].value;
           return {
@@ -144,9 +172,26 @@ class ProjectNewStatic extends React.Component {
       return;
     }
     let fieldObjet = lodash.mapValues(fields, "value");
-    let payload = { ...fieldObjet, chefProjetCuid: chefProjet.value };
-    console.log(payload);
-    this.props.create(payload, this.props.token);
+    const { project } = this.props;
+    if (isEmpty(project)) {
+      let payload = {
+        ...fieldObjet,
+        chefProjetCuid: chefProjet.cuid,
+        chefProjetName: chefProjet.nom
+      };
+      
+      this.props.create(payload, this.props.token);
+    }else{
+      let payload = {
+        ...project,
+        ...fieldObjet,
+        chefProjetCuid: chefProjet.cuid,
+        chefProjetName: chefProjet.nom
+      };
+
+      
+      await this.props.update(payload, this.props.token);      
+    }
   };
 
   onChange = event => {
@@ -169,7 +214,14 @@ class ProjectNewStatic extends React.Component {
 
   render() {
     const { fields, isLoading } = this.state;
-
+    const { project } = this.props;
+    const titleCard = isEmpty(this.props.project)
+      ? "Nouveau Projet"
+      : "Modifier Projet";
+    const titleBtn = isEmpty(this.props.project)
+    ? "Créer"
+    : "Modifier";
+    const cuid = !isEmpty(project) ? project.chefProjetCuid : "";
     return isLoading ? (
       <DefaultLoading />
     ) : (
@@ -178,7 +230,7 @@ class ProjectNewStatic extends React.Component {
           <Col md="12">
             <Card className="card-user">
               <CardHeader>
-                <CardTitle tag="h5">Nouveau Projet</CardTitle>
+                <CardTitle tag="h5">{titleCard}</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form onSubmit={this.onSubmit}>
@@ -201,27 +253,7 @@ class ProjectNewStatic extends React.Component {
                         </FormFeedback>
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col md="12">
-                      <FormGroup>
-                        <label>Description du Projet</label>
-                        <Input
-                          name="description"
-                          type="textarea"
-                          placeholder="Enoncé du problème"
-                          value={fields["description"]["value"]}
-                          invalid={fields["description"]["error"] !== null}
-                          onChange={this.onChange}
-                        />
-                        <FormFeedback>
-                          {fields["description"]["error"] !== null
-                            ? fields["description"]["error"]
-                            : ""}
-                        </FormFeedback>
-                      </FormGroup>
-                    </Col>
-                  </Row>
+                  </Row>                  
                   <Row>
                     <Col md="12">
                       <FormGroup>
@@ -280,7 +312,11 @@ class ProjectNewStatic extends React.Component {
                       </FormGroup>
                     </Col>
                     <Col md="4">
-                      <SuggestComponent onChangeChefProjet={this.onChangeChefProjet} value="" label="Chef Projet" />
+                      <SuggestComponent
+                        onChangeChefProjet={this.onChangeChefProjet}
+                        value={cuid}
+                        label="Chef Projet"
+                      />
                     </Col>
                     <Col md="4">
                       <FormGroup>
@@ -335,12 +371,14 @@ class ProjectNewStatic extends React.Component {
                         disabled={this.props.status === "pending"}
                       >
                         {this.props.status !== "pending" ? (
-                          <i className="fa fa-plus mr-1"></i>
+                          isEmpty(this.props.project) ?
+                          <i className="fa fa-plus mr-2"></i>:<i className="fa fa-edit mr-2"></i>
                         ) : (
-                          <i className="fa fa-spinner fa-spin"></i>
+                          <i className="fa fa-spinner mr-2 fa-spin"></i>
                         )}
-                        Créer
+                        {titleBtn}
                       </Button>
+                      <Button className="btn-danger ml-4"><i className="fa fa-times mr-2"></i>Annuler</Button>
                     </div>
                   </Row>
                 </Form>

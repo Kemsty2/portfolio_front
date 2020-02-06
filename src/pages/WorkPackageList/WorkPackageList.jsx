@@ -6,83 +6,87 @@ import {
   CardHeader,
   CardTitle,
   CardBody,
-  Table,  
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu
+  Button
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import WorkTr from "./WorkTr";
+import CrudTable from "../../components/CrudTable";
+import {isEmpty} from '../../utils/utilsFunction.js';
+
+const columns = [
+  { nom: "objet", title: "Nom", linkTo:"/projects" },
+  { nom: "type", title: "Type Projet" },
+  { nom: "createdAt", title: "Crée Le", date: true },
+  { nom: "updatedAt", title: "Dernière Mise à Jour", date: true},
+  { nom: "chefProjetName", title: "Chef Projet"}
+];
 
 class WorkPackageList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dropdownOpen: false
-    }
-
-    this.dropdownToggle = this.dropdownToggle.bind(this);
+      filterOpen: false
+    };
   }
 
-  dropdownToggle(e) {
+  /* componentDidMount(){
+    const {show_add_number} = this.props.location.search;
+    console.log(show_add_number);    
+  }
+
+  setFilterOpen = filterOpen => {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen
+      filterOpen
     });
-  }
+  };
+
+  toggle = e => {
+    e.preventDefault();
+
+    this.setFilterOpen(!this.state.filterOpen);
+  };
+
+  onEdit = (e, project) => {
+    e.persist();
+
+    if(!isEmpty(project)){
+      this.props.history.push(`/projects/new?idProject=${project.id}`);
+    }
+  } */
 
   render() {
     return (
       <div className="content">
-        <Row>
+        Lots de travaux
+        {/* <Row>
           <Col md="12">
             <Card>
               <CardHeader className="d-flex justify-content-between bg-black">
-                <CardTitle tag="h4">Liste des Actions</CardTitle>
-                <Dropdown
-                  isOpen={this.state.dropdownOpen}
-                  toggle={e => this.dropdownToggle(e)}
-                >
-                  <DropdownToggle caret className="btn-success">                    
-                    <>
-                      <i className="fa fa-plus mr-1"></i>
-                      <span className="d-md-inline">Créer</span>
-                    </>
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <Link to="/projects/1/workpackages/create_new?type=1" className="dropdown-item">
-                      Tâche
-                    </Link>
-                    <Link to="/projects/1/workpackages/create_new?type=2" className="dropdown-item">
-                      Phase
-                    </Link>
-                  </DropdownMenu>
-                </Dropdown>                
+                <CardTitle tag="h4">Projets</CardTitle>
+                <div>
+                  <Link to="/projects/new" className="btn btn-success">
+                    <i className="fa fa-plus mr-1 d-inline"></i>
+                    <span>Créer Projet</span>
+                  </Link>                  
+                  <Button onClick={e => this.toggle(e)}>
+                    <i className="fa fa-filter mr-1 d-inline"></i> Filtrer
+                  </Button>
+                </div>
               </CardHeader>
               <CardBody>
-                <Table hover bordered>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>Type</th>
-                      <th>Id</th>
-                      <th>Sujet</th>
-                      <th>Statut</th>
-                      <th>Assigné A</th>
-                      <th>Priorité</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <WorkTr />
-                    <WorkTr />
-                    <WorkTr />
-                    <WorkTr />
-                    <WorkTr />
-                  </tbody>
-                </Table>
+                <CrudTable
+                  actions={["edit", "delete", "search"]}
+                  {...this.props}
+                  columns={columns}
+                  filterOpen={this.state.filterOpen}
+                  toggleModal={this.onEdit}
+                  delete={this.props.delete}
+                  idProject={this.props.match.params.idProject}
+                />
               </CardBody>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
       </div>
     );
   }

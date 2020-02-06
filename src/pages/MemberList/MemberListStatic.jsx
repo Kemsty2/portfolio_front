@@ -22,16 +22,12 @@ import SuggestComponent from "../../components/Suggestions/SuggestComponent";
 import { validateField, isFormValid } from "../../validation/validator";
 import CrudTable from "../../components/CrudTable";
 import lodash from "lodash";
+import {isEmpty} from '../../utils/utilsFunction.js';
 
-function isEmpty(obj) {
-  let result = false;
-  if (Object.keys(obj).length === 0 && obj.constructor === Object) {
-    result = true;
-  }
-  return result;
-}
+
 
 class MembersList extends React.Component {
+  
   constructor(props) {
     super(props);
 
@@ -67,6 +63,15 @@ class MembersList extends React.Component {
   componentDidMount() {
     const { idProject } = this.props.match.params;
     this.getColums(idProject);
+
+    const params = new URLSearchParams(this.props.location.search);
+    const show_add_members = params.get("show_add_members");
+    
+    if(show_add_members){
+      this.setState({
+        modal: !this.state.modal
+      })
+    }
   }
 
   toggle = (e, member = {}) => {
@@ -206,7 +211,7 @@ class MembersList extends React.Component {
         ...member,
         ...fieldObjet,        
       };
-      console.log("payload", payload);
+            
       await this.props.update(payload, this.props.token);
     }    
     this.setState({
@@ -252,6 +257,7 @@ class MembersList extends React.Component {
                   filterOpen={this.state.filterOpen}
                   toggleModal={this.toggle}
                   delete={this.props.delete}
+                  idProject={this.props.match.params.idProject}
                 />
               </CardBody>
             </Card>

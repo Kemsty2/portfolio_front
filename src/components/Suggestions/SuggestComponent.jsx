@@ -136,7 +136,7 @@ export default class SuggestComponent extends React.Component {
     event,
     { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }
   ) => {
-    console.log(suggestionValue);
+    
     this.setState({
       noSuggestions: false,
       suggestionSelected: getSuggestionValue(suggestion)

@@ -10,13 +10,14 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import CrudTable from "../../components/CrudTable";
+import {isEmpty} from '../../utils/utilsFunction.js';
 
 const columns = [
   { nom: "objet", title: "Nom", linkTo:"/projects" },
   { nom: "type", title: "Type Projet" },
   { nom: "createdAt", title: "Crée Le", date: true },
   { nom: "updatedAt", title: "Dernière Mise à Jour", date: true},
-  { nom: "chefProjetCuid", title: "Chef Projet", getNameFromApi: true }
+  { nom: "chefProjetName", title: "Chef Projet"}
 ];
 
 class ProjectListStatic extends React.Component {
@@ -26,6 +27,11 @@ class ProjectListStatic extends React.Component {
     this.state = {
       filterOpen: false
     };
+  }
+
+  componentDidMount(){
+    const {show_add_number} = this.props.location.search;
+    
   }
 
   setFilterOpen = filterOpen => {
@@ -39,6 +45,14 @@ class ProjectListStatic extends React.Component {
 
     this.setFilterOpen(!this.state.filterOpen);
   };
+
+  onEdit = (e, project) => {
+    e.persist();
+
+    if(!isEmpty(project)){
+      this.props.history.push(`/projects/new?idProject=${project.id}`);
+    }
+  }
 
   render() {
     return (
@@ -68,6 +82,9 @@ class ProjectListStatic extends React.Component {
                   {...this.props}
                   columns={columns}
                   filterOpen={this.state.filterOpen}
+                  toggleModal={this.onEdit}
+                  delete={this.props.delete}
+                  idProject={this.props.match.params.idProject}
                 />
               </CardBody>
             </Card>

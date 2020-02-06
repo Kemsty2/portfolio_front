@@ -56,8 +56,7 @@ export function isFormValid(formData, constraintGroup) {
   if (typeof formData !== "object") {
     throw new Error("FormData must be an object !");
   }
-
-  console.log(formData);
+  
 
   let valid = true;
   const keys = Object.keys(formData);
@@ -69,7 +68,7 @@ export function isFormValid(formData, constraintGroup) {
       break;
     }
   }
-  console.log("valid", valid);
+
 
   return valid;
 }

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { listerProjects } from "../../redux/actions";
 import ProjectListStatic from "./ProjectListStatic";
 import { MessagesActions } from "../../redux/actions/types";
-import { getProjectsAPI } from "../../api/project";
+import { getProjectsAPI, deleteProjectAPI } from "../../api/project";
 import { defineNumProjects } from "../../redux/actions/projects";
 
 const mapStateToProps = state => {
@@ -24,7 +24,7 @@ const mapDispatchToProps = dispatch => ({
 
   onEvent: async (data,token) => {
     try {
-      console.log("data", data);
+      
       dispatch({
         type: MessagesActions.PENDING_ADD,
         message: ""
@@ -32,8 +32,7 @@ const mapDispatchToProps = dispatch => ({
 
       const result = await getProjectsAPI(data, token);
       dispatch(defineNumProjects(result.total));
-
-      console.log("listOfProjects", result);
+      
       if (data.skip_rows < -1) {        
       } else {
         dispatch(listerProjects(result.data));
@@ -47,7 +46,31 @@ const mapDispatchToProps = dispatch => ({
           "Une erreur inattendue est survenue"
       });
     }
-  }  
+  },
+  
+  delete: async (payload, token) => {
+    try {
+      dispatch({
+        type: MessagesActions.PENDING_ADD,
+        message: ""
+      });
+      
+      //  Création du projet
+      await deleteProjectAPI(payload, token);       
+
+      return dispatch({
+        type: MessagesActions.SUCCESS_ADD,
+        message: "Projet Supprimé avec succès"
+      });
+    } catch (err) {
+      return dispatch({
+        type: MessagesActions.FAILED_ADD,
+        message:
+          (err.response && err.response.data) ||
+          "Une erreur inattendue est survenue"
+      });
+    }
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectListStatic);

@@ -6,14 +6,7 @@ const constraints = {
         minimum: 1,
         message: "^Veuillez saisir le nom du projet"
       }
-    },
-    description: {
-      presence: true,
-      length: {        
-        minimum: 1,
-        message: "^Veuillez saisir l'objet du projet"
-      }
-    },
+    },    
     perimetre: {
       presence: true,
       length: {        

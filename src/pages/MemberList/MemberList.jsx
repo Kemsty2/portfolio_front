@@ -1,7 +1,7 @@
 import MemberListStatic from "./MemberListStatic";
 import { MessagesActions } from "../../redux/actions/types";
 import { connect } from "react-redux";
-import { getMembersAPI, postMemberAPI, putMemberAPI, deleteMemberAPI } from "../../api/member";
+import { getMembersOfProjectAPI, postMemberAPI, putMemberAPI, deleteMemberAPI } from "../../api/member";
 import {
   defineNumMembers,
   listerMembers,
@@ -27,16 +27,16 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
   onEvent: async (data, token) => {
     try {
-      console.log("data", data);
+      
       dispatch({
         type: MessagesActions.PENDING_ADD,
         message: ""
       });
 
-      const result = await getMembersAPI(data, token);
+      const result = await getMembersOfProjectAPI(data.idProject, data, token);
       dispatch(defineNumMembers(result.total));
 
-      console.log("listOfMembers", result);
+      
       if (data.skip_rows < -1) {
       } else {
         dispatch(listerMembers(result.data));
@@ -58,7 +58,7 @@ const mapDispatchToProps = dispatch => ({
         message: ""
       });
 
-      console.log("payload", payload);
+      
       //  Création du projet
       const member = await postMemberAPI(payload, token);
 
@@ -66,7 +66,7 @@ const mapDispatchToProps = dispatch => ({
       //  await postMembersAPI(payload, token)
       dispatch(addMember(member));
 
-      console.log("member", member);
+      
 
       return dispatch({
         type: MessagesActions.SUCCESS_ADD,
@@ -88,7 +88,7 @@ const mapDispatchToProps = dispatch => ({
         message: ""
       });
 
-      console.log("payload", payload);
+      
       //  Création du projet
       const member = await putMemberAPI(payload.id, payload, token);
 
@@ -96,7 +96,7 @@ const mapDispatchToProps = dispatch => ({
       //  await postMembersAPI(payload, token)
       dispatch(updateMember(member));
 
-      console.log("member", member);
+      
 
       return dispatch({
         type: MessagesActions.SUCCESS_ADD,
@@ -117,8 +117,7 @@ const mapDispatchToProps = dispatch => ({
         type: MessagesActions.PENDING_ADD,
         message: ""
       });
-
-      console.log("payload", payload);
+    
       //  Création du projet
       await deleteMemberAPI(payload, token);
 

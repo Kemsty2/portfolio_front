@@ -5,7 +5,7 @@ import VueGlobaleStatic from "./VueGlobaleStatic";
 import { MessagesActions } from "../../redux/actions/types";
 import { getProjectAPI, putProjectAPI, patchProjectAPI } from "../../api/project";
 import { getStatutsAPI } from "../../api/statut";
-import { getMembersAPI } from "../../api/member";
+import { getMembersOfProjectAPI } from "../../api/member";
 
 
 const mapStateToProps = state => {
@@ -27,65 +27,62 @@ const mapDispatchToProps = dispatch => ({
     try {
       dispatch({
         type: MessagesActions.PENDING_ADD,
-        message: "Action en cours"
+        message: ""
       });
       
       const project = await getProjectAPI(data.idProject, token);
-      console.log("project", project);
+      
       dispatch(setProjectDetails(project));      
 
       return dispatch({
         type: MessagesActions.SUCCESS_ADD,
-        message: "Projet Chargé avec succès"
+        message: ""
       });
     } catch (err) {
-      console.log(err);
-      return dispatch({
+      
+      dispatch({
         type: MessagesActions.FAILED_ADD,
         message:
           (err.response && err.response.data) ||
           "Une erreur inattendue est survenue"
       });
+      throw new Error();  
     }
   },
   getStatuts: async (token) => {
     try{      
       const result = await getStatutsAPI(token);
-      console.log("statut",result);
+      
       if(result && result.data){
         result.data.map(statut => {
-          console.log("statut", statut)
+          
           dispatch(addStatut(statut));
         })
       }
       return;
     }catch(err){
-      return dispatch({
+      dispatch({
         type: MessagesActions.FAILED_ADD,
         message:
           (err.response && err.response.data) ||
           "Une erreur inattendue est survenue"
       });
+      throw new Error();      
     }
   },
-  getMembers: async (data, token) => {
+  getMembers: async (projectId, token) => {
     try{      
-      const result = await getMembersAPI(token);
-      console.log("statut",result);
-      if(result && result.data){
-        result.data.map(member => {
-          console.log("member", member)
-          dispatch(addStatut(member));
-        })
-      }
-      return;
+      const result = await getMembersOfProjectAPI(projectId, {skip_rows: 0, max_rows: 3}, token);
+        
+      return result.data;
     }catch(err){
-      return dispatch({
+      dispatch({
         type: MessagesActions.FAILED_ADD,
         message:
           (err.response && err.response.data) ||
           "Une erreur inattendue est survenue"
       });
+      return [];
     }
   },
   update: d => dispatch(updateProject(d))

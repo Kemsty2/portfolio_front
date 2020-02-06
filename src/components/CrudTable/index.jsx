@@ -72,13 +72,14 @@ class CrudTable extends Component {
     let page = idx;
     if (typee === "next") page = page + 1;
     if (typee === "previous") page = page - 1;
-    await this.props.onEvent(
+    await this.props.onEvent(      
       {
         max_rows,
         search,
         skip_rows: page,
         openDate,
-        closeDate
+        closeDate,
+        idProject: this.props.idProject
       },
       this.props.token
     );
@@ -114,7 +115,7 @@ class CrudTable extends Component {
 
   showModal(e, item = { id: "new" + Date.now() }) {
     e.preventDefault();
-    console.log("item edit", item)
+    
     this.setState({ item }, () => {
       this.props.toggleModal(e, item);
     });

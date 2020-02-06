@@ -8,40 +8,57 @@ import {
   CardBody,
   Table
 } from "reactstrap";
-import Select from "react-select";
-import { colourStyles } from "../../utils/utilsSelect";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import DefaultLoading from "../../components/DefaultLoading";
-import logo from "../../assets/img/ORANGE_LOGO_rgb.jpg";
+import { isEmpty } from "../../utils/utilsFunction";
 
 class VueGlobaleStatic extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoading: false
+      isLoading: false,
+      listOfMembers: [],
+      redirect: false
     };
   }
 
   async componentDidMount() {
-    const { idProject } = this.props.match.params;
-    console.log("idProject", idProject);
-    this.setState({
-      isLoading: true
-    });
-    await this.props.init({ idProject }, this.props.token);
-    this.setState({
-      isLoading: false
-    });
+    try {
+      const { idProject } = this.props.match.params;
+      let listOfMembers = [];
+      
+      this.setState({
+        isLoading: true
+      });
+      await this.props.init({ idProject }, this.props.token);
+
+      listOfMembers = await this.props.getMembers(idProject, this.props.token);
+      this.setState({
+        listOfMembers: listOfMembers,
+        isLoading: false
+      });
+    } catch (err) {
+      this.setState({
+        redirect: true
+      })
+    }
   }
 
   render() {
-    const options = [
-      { value: "3", label: "Sur la Bonne Voie", color: "#36B37E" },
-      { value: "1", label: "Sur la Mauvaise Voie", color: "#FF5630" },
-      { value: "2", label: "A Risque", color: "#FF8B00" },
-      { value: "0", label: "Non Défini", color: "#666666" }
-    ];
+    const { project } = this.props;
+    const { redirect } = this.state;
+    if (redirect) {
+      return <Redirect to="/404" />;
+    }
+    const members = this.state.listOfMembers.map((member, key) => {
+      return (
+        <tr key={key}>
+          <td>{member.nom}</td>
+          <td className="text-capitalize">{member.type}</td>
+        </tr>
+      );
+    });
     return (
       <div className="content">
         {this.state.isLoading ? (
@@ -90,7 +107,10 @@ class VueGlobaleStatic extends React.Component {
                     <div className="row no-gutters">
                       <div className="col-md-4 align-items-center">
                         <img
-                          src="http://microsvc.orange.cm/api/InfoEmployee/photo/v0/WDTN4590"
+                          src={
+                            "http://microsvc.orange.cm/api/InfoEmployee/photo/v0/" +
+                            project.chefProjetCuid
+                          }
                           className="card-img align-self-center"
                           alt="..."
                         />
@@ -100,10 +120,12 @@ class VueGlobaleStatic extends React.Component {
                           <h5 className="card-title">Chef Projet</h5>
                           <p className="card-text">
                             <span className="d-block">
-                              <b>Nom</b> : Kemgne Moyo Steeve Aymard
+                              <b>Nom</b> :{" "}
+                              {!isEmpty(project) ? project.chefProjetName : ""}
                             </span>
                             <span className="d-block">
-                              <b>Cuid</b> : WDTN4590
+                              <b>Cuid</b> :{" "}
+                              {!isEmpty(project) ? project.chefProjetCuid : ""}
                             </span>
                           </p>
                         </div>
@@ -117,23 +139,23 @@ class VueGlobaleStatic extends React.Component {
               <Col md="6">
                 <Card className="global-card">
                   <CardHeader>
-                    <CardTitle tag="h4">Objet du Projet</CardTitle>
+                    <CardTitle tag="h4">
+                      {!isEmpty(project) ? project.objet : ""}
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <hr />
                     <div className="text-justify mt-2">
                       <h4>Périmètre du projet</h4>
                       <p className="project_statut_desc">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit.
+                        {!isEmpty(project) ? project.perimetre : ""}
                       </p>
                     </div>
                     <hr />
                     <div className="text-justify mt-2">
                       <h4>Objectifs du projet</h4>
                       <p className="project_statut_desc">
-                        Lorem, ipsum dolor sit amet consectetur adipisicing
-                        elit.
+                        {!isEmpty(project) ? project.objectifs : ""}
                       </p>
                     </div>
                   </CardBody>
@@ -155,20 +177,15 @@ class VueGlobaleStatic extends React.Component {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>Propriétaire Projet</td>
-                          <td className="text-capitalize">
-                            Kemgne Moyo Steeve Aymard
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Membre</td>
-                          <td className="text-capitalize">Kouayep Paterne</td>
-                        </tr>
-                        <tr>
-                          <td>Membre</td>
-                          <td className="text-capitalize">Kouayep Paterne</td>
-                        </tr>
+                        {members.length <= 0 ? (
+                          <tr>
+                            <td colSpan="2" className="text-center">
+                              Aucun Membre Disponible
+                            </td>
+                          </tr>
+                        ) : (
+                          members
+                        )}
                       </tbody>
                     </Table>
                     <div className="d-flex justify-content-start">
