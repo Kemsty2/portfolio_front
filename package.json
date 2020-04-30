@@ -15,7 +15,7 @@
     "classnames": "^2.2.6",
     "focus-visible": "5.0.2",
     "immutable": "^4.0.0-rc.12",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "keycloak-js": "^8.0.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
