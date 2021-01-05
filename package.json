@@ -8,7 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "autoprefixer": "^9.7.4",
     "autosuggest-highlight": "^3.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "boosted": "^4.4.0",
     "bootstrap": "^4.4.1",
     "chroma-js": "^2.1.0",
